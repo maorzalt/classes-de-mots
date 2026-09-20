@@ -1,0 +1,1186 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Classes de mots 2">
+<title>Classes de mots 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root {
+  --bg: #F2F3F8;
+  --surface: #FFFFFF;
+  --surface2: #E8EAF2;
+  --ink: #171A2B;
+  --muted: #5C6279;
+  --line: #D8DBE6;
+  --primary: #2F55D4;
+  --primary-ink: #FFFFFF;
+  --ok: #1F9D6A;  --ok-bg: #E2F5EB;
+  --bad: #D24B47; --bad-bg: #FBE6E5;
+  --warn: #A96C0F; --warn-bg: #FBF0D9;
+  --c-nom: #D64545;
+  --c-det: #DE7A1C;
+  --c-adj: #B08A12;
+  --c-pro: #C93F8F;
+  --c-verbe: #7A3DB8;
+  --c-adv: #1B8E7D;
+  --c-prep: #2A78C2;
+  --c-conj: #3B9A3B;
+  --c-manip: #5C6279;
+  --c-mix: #2F55D4;
+  --accent: var(--primary);
+  --shadow: 0 1px 2px rgba(23,26,43,.06), 0 8px 24px -12px rgba(23,26,43,.18);
+  --r: 14px;
+  --font-body: "Nunito", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-head: "Outfit", "Nunito", -apple-system, "Segoe UI", sans-serif;
+  --tutor: #6B4FD8;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121420; --surface: #1B1E2C; --surface2: #262A3B; --ink: #EEF0F7; --muted: #A3A9BE; --line: #303549;
+    --primary: #7D95FF; --primary-ink: #0F1220;
+    --ok: #4CC58C; --ok-bg: #16332A; --bad: #F48A86; --bad-bg: #3B2022; --warn: #E3B65A; --warn-bg: #3A2F16;
+    --c-nom: #F27070; --c-det: #F2A050; --c-adj: #E2BE3C; --c-pro: #EA74B9; --c-verbe: #B58AEC; --c-adv: #47C4B2; --c-prep: #6DACF2; --c-conj: #6FC86F; --c-manip: #A3A9BE; --c-mix: #7D95FF;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
+    --tutor: #A08BFF;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121420; --surface: #1B1E2C; --surface2: #262A3B; --ink: #EEF0F7; --muted: #A3A9BE; --line: #303549;
+  --primary: #7D95FF; --primary-ink: #0F1220;
+  --ok: #4CC58C; --ok-bg: #16332A; --bad: #F48A86; --bad-bg: #3B2022; --warn: #E3B65A; --warn-bg: #3A2F16;
+  --c-nom: #F27070; --c-det: #F2A050; --c-adj: #E2BE3C; --c-pro: #EA74B9; --c-verbe: #B58AEC; --c-adv: #47C4B2; --c-prep: #6DACF2; --c-conj: #6FC86F; --c-manip: #A3A9BE; --c-mix: #7D95FF;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
+  --tutor: #A08BFF;
+}
+
+html, body { height: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 17px; line-height: 1.5;
+  -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent;
+}
+* { box-sizing: border-box; }
+b, strong { font-weight: 800; }
+button { font: inherit; color: inherit; }
+.svg { display: inline-flex; line-height: 0; }
+[hidden] { display: none !important; }
+
+/* ---------- Coquille ---------- */
+.app { min-height: 100%; display: flex; flex-direction: column; max-width: 600px; margin: 0 auto; }
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 8px;
+  padding: 10px 12px 8px; background: var(--bg); border-bottom: 1px solid var(--line);
+}
+.top.home { grid-template-columns: auto 1fr auto auto; }
+.top .prog { grid-column: 1 / -1; height: 5px; background: var(--surface2); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.top .prog-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width .3s ease; }
+.brand { font-family: var(--font-head); font-weight: 700; font-size: 18px; letter-spacing: .01em; }
+.spacer { flex: 1; }
+.top-mid { min-width: 0; text-align: center; }
+.top-title { font-family: var(--font-head); font-weight: 700; font-size: 16px; line-height: 1.1; color: var(--accent); text-wrap: balance; }
+.top-sub { font-size: 12.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+.timer { font-variant-numeric: tabular-nums; font-size: 14px; color: var(--muted); font-weight: 700; padding: 4px 8px; border-radius: 8px; background: var(--surface2); }
+.icon-btn { width: 40px; height: 40px; border-radius: 12px; border: 0; background: transparent; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: var(--ink); }
+.icon-btn:hover { background: var(--surface2); }
+.icon-btn:focus-visible, .btn:focus-visible, .opt:focus-visible, .tok:focus-visible, .type-in:focus-visible, .link-btn:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent); outline-offset: 2px; }
+
+.main { flex: 1; padding-block: 18px 24px; padding-inline: 16px; display: flex; flex-direction: column; gap: 16px; }
+.bar {
+  position: sticky; bottom: 0; z-index: 5; display: flex; gap: 10px; align-items: center;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--bg); border-top: 1px solid var(--line);
+}
+.bar .btn.primary { flex: 1; }
+.bar .btn.ghost { flex: 0 0 auto; }
+
+/* ---------- Boutons ---------- */
+.btn {
+  min-height: 50px; padding: 10px 18px; border-radius: 14px; border: 2px solid transparent; cursor: pointer;
+  font-weight: 800; font-size: 16px; line-height: 1.2; text-align: center; transition: transform .06s ease, background .15s ease;
+}
+.btn:active { transform: scale(.98); }
+.btn.primary { background: var(--accent); color: var(--primary-ink); }
+.btn.primary:disabled { opacity: .45; cursor: not-allowed; }
+.btn.ghost { background: var(--surface); color: var(--ink); border-color: var(--line); }
+.btn.ghost:disabled { opacity: .5; cursor: default; }
+.btn.small { min-height: 40px; padding: 6px 14px; font-size: 14.5px; background: var(--surface); border-color: var(--line); }
+.btn.small:hover { border-color: var(--accent); }
+.link-btn { background: none; border: 0; color: var(--muted); text-decoration: underline; cursor: pointer; font-size: 14.5px; align-self: center; padding: 8px; }
+.tutor-btn { display: none; background: color-mix(in srgb, var(--tutor) 12%, var(--surface)); color: var(--tutor); border-color: color-mix(in srgb, var(--tutor) 35%, transparent); }
+body.has-tutor .tutor-btn { display: inline-flex; align-items: center; justify-content: center; }
+.tutor-btn.inline { margin-top: 10px; min-height: 42px; font-size: 15px; }
+
+/* ---------- Accueil ---------- */
+.hero { display: flex; flex-direction: column; gap: 10px; }
+.eyebrow { margin: 0; font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { margin: 0; font-family: var(--font-head); font-weight: 700; font-size: clamp(30px, 8vw, 40px); line-height: 1.05; text-wrap: balance; letter-spacing: -.01em; }
+h2 { margin: 0; font-family: var(--font-head); font-weight: 700; font-size: 26px; line-height: 1.15; text-wrap: balance; }
+h3 { margin: 0 0 8px; font-family: var(--font-head); font-weight: 700; font-size: 18px; }
+.lead { margin: 0; font-size: 17px; color: var(--ink); max-width: 36em; }
+.legend { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.leg { font-size: 13px; font-weight: 800; padding: 4px 10px; border-radius: 999px; }
+.leg.var { background: color-mix(in srgb, var(--c-nom) 14%, var(--surface)); color: var(--c-nom); }
+.leg.inv { background: color-mix(in srgb, var(--c-prep) 14%, var(--surface)); color: var(--c-prep); }
+
+.modlist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.modrow {
+  display: grid; grid-template-columns: 36px 1fr auto; align-items: center; gap: 12px;
+  padding: 12px 12px 12px 14px; background: var(--surface); border-radius: var(--r); border: 2px solid transparent;
+  border-left: 5px solid var(--accent, var(--line));
+}
+.modrow.next { border-color: var(--accent, var(--primary)); box-shadow: var(--shadow); }
+.modrow.exam { --accent: var(--primary); }
+.moddot { width: 34px; height: 34px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-variant-numeric: tabular-nums; background: color-mix(in srgb, var(--accent, var(--primary)) 14%, var(--surface)); color: var(--accent, var(--primary)); }
+.modrow.done .moddot { background: var(--ok-bg); color: var(--ok); }
+.modtxt { min-width: 0; }
+.modname { font-family: var(--font-head); font-weight: 700; font-size: 17px; line-height: 1.2; }
+.modmeta { font-size: 13.5px; color: var(--muted); }
+.foot-note { margin: 0; font-size: 14px; color: var(--muted); }
+.warn-box { margin: 0; padding: 10px 14px; border-radius: 12px; background: var(--warn-bg); color: var(--warn); font-weight: 700; font-size: 15px; }
+
+/* ---------- Puces de classe ---------- */
+.chip-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.chip { display: inline-flex; align-items: center; padding: 4px 11px; border-radius: 999px; font-size: 13px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; background: color-mix(in srgb, var(--accent) 14%, var(--surface)); color: var(--accent); }
+.exam-chip { --accent: var(--primary); }
+.lesson-count, .qcount { font-size: 14px; color: var(--muted); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* ---------- Leçon ---------- */
+.lesson-h { color: var(--accent); }
+.lesson-h .sym { display: inline-block; margin-left: 6px; padding: 0 8px; border-radius: 8px; background: color-mix(in srgb, var(--accent) 14%, var(--surface)); font-size: .8em; vertical-align: middle; }
+.lesson-b { background: var(--surface); border-radius: var(--r); padding: 16px 18px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 10px; font-size: 17px; }
+.lesson-b p { margin: 0; }
+.lesson-b .ex { padding: 10px 14px; border-left: 4px solid var(--accent); background: color-mix(in srgb, var(--accent) 7%, var(--surface)); border-radius: 0 10px 10px 0; font-size: 16.5px; line-height: 1.55; }
+.lesson-b .warn { padding: 10px 14px; border-radius: 10px; background: var(--warn-bg); color: var(--warn); font-weight: 600; }
+.lesson-b .tbl { display: grid; gap: 6px; }
+.lesson-b .tbl > div { padding: 8px 12px; background: var(--surface2); border-radius: 10px; font-size: 15.5px; line-height: 1.4; }
+.lesson-b .tbl small { color: var(--muted); font-size: 13.5px; }
+.lesson-b u { text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.lesson-b s { color: var(--muted); }
+.intro-note { margin: 0; color: var(--muted); font-size: 15px; font-style: italic; }
+.dots { display: flex; gap: 6px; justify-content: center; margin-top: auto; padding-top: 6px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+.dot.seen { background: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.dot.on { background: var(--accent); width: 22px; border-radius: 4px; }
+
+/* ---------- Questions ---------- */
+.item { display: flex; flex-direction: column; gap: 14px; }
+.q { margin: 0; font-size: 18.5px; line-height: 1.45; font-weight: 600; }
+.q b { color: var(--accent); }
+.opts { display: flex; flex-direction: column; gap: 8px; }
+.opt {
+  display: grid; grid-template-columns: 30px 1fr; align-items: center; gap: 10px; text-align: left;
+  min-height: 52px; padding: 10px 14px 10px 10px; border-radius: 14px; border: 2px solid var(--line); background: var(--surface); cursor: pointer; font-size: 16.5px; line-height: 1.35;
+}
+.opt-l { width: 30px; height: 30px; border-radius: 9px; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; background: var(--surface2); color: var(--muted); }
+.opt.sel { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
+.opt.sel .opt-l { background: var(--accent); color: var(--primary-ink); }
+.opt.right { border-color: var(--ok); background: var(--ok-bg); }
+.opt.right .opt-l { background: var(--ok); color: #fff; }
+.opt.wrong { border-color: var(--bad); background: var(--bad-bg); }
+.opt.wrong .opt-l { background: var(--bad); color: #fff; }
+.opt:disabled { cursor: default; }
+.opt:disabled:not(.right):not(.wrong) { opacity: .6; }
+
+.sentence { margin: 0; padding: 14px 14px; background: var(--surface); border-radius: var(--r); box-shadow: var(--shadow); font-size: 19px; line-height: 2; }
+.tok { display: inline; padding: 3px 5px; margin: 0 -1px; border-radius: 8px; border: 2px solid transparent; background: transparent; cursor: pointer; line-height: 1.4; }
+.tok:hover { background: var(--surface2); }
+.tok.sel { background: color-mix(in srgb, var(--accent) 16%, var(--surface)); border-color: var(--accent); }
+.tok.right { background: var(--ok-bg); border-color: var(--ok); }
+.tok.wrong { background: var(--bad-bg); border-color: var(--bad); text-decoration: line-through; }
+.tok.missed { border-color: var(--warn); border-style: dashed; background: var(--warn-bg); }
+.tok:disabled { cursor: default; }
+.punct { color: var(--muted); }
+.help { margin: 0; font-size: 14px; color: var(--muted); }
+
+.type-in { width: 100%; min-height: 54px; padding: 10px 16px; border-radius: 14px; border: 2px solid var(--line); background: var(--surface); color: var(--ink); font-size: 19px; }
+.type-in:focus { border-color: var(--accent); outline: none; }
+.type-in.right { border-color: var(--ok); background: var(--ok-bg); }
+.type-in.wrong { border-color: var(--bad); background: var(--bad-bg); }
+
+.feedback { border-radius: var(--r); padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; border: 2px solid var(--line); background: var(--surface); }
+.feedback.ok { border-color: var(--ok); background: var(--ok-bg); }
+.feedback.bad { border-color: var(--bad); background: var(--bad-bg); }
+.feedback.hint { border-color: var(--warn); background: var(--warn-bg); }
+.feedback p { margin: 0; }
+.fb-title { font-family: var(--font-head); font-weight: 700; font-size: 19px; }
+.feedback.ok .fb-title { color: var(--ok); }
+.feedback.bad .fb-title { color: var(--bad); }
+.feedback.hint .fb-title { color: var(--warn); }
+.fb-ans { font-size: 16.5px; }
+.fb-why { font-size: 16px; line-height: 1.5; }
+.fb-why u { text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.fb-note { font-size: 14px; color: var(--muted); }
+
+/* ---------- Fins ---------- */
+.end { align-items: flex-start; }
+.end h2 { font-size: 34px; }
+.stars { display: flex; gap: 6px; font-size: 34px; line-height: 1; }
+.star { color: var(--line); }
+.star.on { color: var(--warn); }
+.score { margin: 0; font-size: 20px; }
+.score b { font-family: var(--font-head); font-size: 26px; color: var(--accent); }
+.bytag { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+.tagrow { display: grid; grid-template-columns: 110px 1fr 44px; align-items: center; gap: 10px; font-size: 15px; }
+.tagname { font-weight: 800; color: var(--accent); }
+.tagbar { height: 10px; border-radius: 5px; background: var(--surface2); overflow: hidden; }
+.tagfill { display: block; height: 100%; background: var(--accent); border-radius: 5px; }
+.tagnum { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); font-weight: 700; }
+.weak { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+.weak .btn.small { border-left: 5px solid var(--accent); text-align: left; }
+.review { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+.err { background: var(--surface); border-radius: 12px; padding: 10px 14px; border-left: 5px solid var(--accent); }
+.err summary { cursor: pointer; font-weight: 700; font-size: 15.5px; line-height: 1.4; }
+.err-tag { display: inline-block; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--accent); margin-right: 6px; }
+.err p { margin: 8px 0 0; font-size: 15.5px; }
+
+/* ---------- Feuille (aide-mémoire, tuteur) ---------- */
+#sheet { position: fixed; inset: 0; z-index: 20; background: rgba(10,12,24,.45); display: flex; align-items: flex-end; justify-content: center; }
+.sheet-box { width: 100%; max-width: 600px; max-height: 92%; background: var(--bg); border-radius: 20px 20px 0 0; display: flex; flex-direction: column; box-shadow: 0 -8px 40px rgba(0,0,0,.25); }
+.sheet-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 8px 18px; border-bottom: 1px solid var(--line); }
+.sheet-head h2 { font-size: 22px; }
+.sheet-body { overflow-y: auto; padding: 14px 16px calc(16px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 10px; -webkit-overflow-scrolling: touch; }
+body.sheet-open { overflow: hidden; }
+.memo-intro { margin: 0; font-weight: 700; }
+.memo { background: var(--surface); border-radius: 12px; padding: 12px 14px; border-left: 5px solid var(--accent); display: flex; flex-direction: column; gap: 6px; font-size: 15.5px; }
+.memo p { margin: 0; }
+.memo-h { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.memo-kind { font-size: 12.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.memo-ex { color: var(--muted); font-style: italic; }
+.tutor-out { display: flex; flex-direction: column; gap: 8px; min-height: 60px; }
+.bubble { padding: 10px 14px; border-radius: 14px; font-size: 16px; line-height: 1.5; white-space: pre-wrap; max-width: 92%; }
+.bubble.me { align-self: flex-end; background: color-mix(in srgb, var(--tutor) 16%, var(--surface)); border-bottom-right-radius: 4px; }
+.bubble.ai { align-self: flex-start; background: var(--surface); border-bottom-left-radius: 4px; box-shadow: var(--shadow); }
+.quick { display: flex; gap: 8px; flex-wrap: wrap; }
+.tutor-form { display: flex; gap: 8px; }
+.tutor-form .type-in { flex: 1; font-size: 16px; min-height: 48px; }
+.tutor-form .btn { min-height: 48px; --accent: var(--tutor); }
+.muted { color: var(--muted); margin: 0; }
+.muted.small { font-size: 13px; }
+
+@media (min-width: 640px) {
+  body { font-size: 16px; }
+  .main { padding-inline: 24px; }
+  .top, .bar { padding-inline: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; scroll-behavior: auto !important; }
+}
+</style>
+</head><body>
+<div id="app" class="app" lang="fr"></div>
+<div id="sheet" hidden></div>
+<script>
+/* ===== Phase 2 — Consolidation : Les classes de mots (Sec. 1, Partie 1) ===== */
+
+const APP = {
+  key: 'classes-de-mots-phase2-v1',
+  brand: 'Classes de mots · 2',
+  eyebrow: 'Phase 2 · Consolidation · Français, secondaire 1',
+  title: 'Les classes de mots, deuxième tour',
+  lead: 'Tu as déjà fait le premier parcours. Ici, presque pas de leçon : un court rappel, puis des exercices tout neufs sur les pièges qui reviennent à l’examen. Termine par l’examen blanc 2.',
+  examTitle: 'Examen blanc 2'
+};
+
+const CLASSES = {
+  nom:  { label: 'Nom',         variable: true  },
+  det:  { label: 'Déterminant', variable: true  },
+  adj:  { label: 'Adjectif',    variable: true  },
+  pro:  { label: 'Pronom',      variable: true  },
+  verbe:{ label: 'Verbe',       variable: true  },
+  adv:  { label: 'Adverbe',     variable: false },
+  prep: { label: 'Préposition', variable: false },
+  conj: { label: 'Conjonction', variable: false },
+  manip:{ label: 'Manipulations', variable: null },
+  mix:  { label: 'Toutes les classes', variable: null }
+};
+const CLASS_ORDER = ['nom','det','adj','pro','verbe','adv','prep','conj'];
+const CLASS_OPTS = CLASS_ORDER.map(k => CLASSES[k].label);
+const MANIP_OPTS = ['L’ajout', 'Le déplacement', 'L’effacement', 'L’encadrement', 'Le remplacement'];
+const CAT_PRO = ['personnel', 'démonstratif', 'relatif', 'indéfini', 'possessif'];
+const SENS_ADV = ['affirmation', 'négation', 'opposition', 'temps', 'lieu', 'manière', 'intensité', 'conséquence'];
+const SENS_PREP = ['appartenance', 'temps', 'lieu / direction', 'cause / origine', 'but', 'moyen / manière', 'opposition', 'exclusion'];
+const SENS_CONJ = ['addition', 'cause / explication', 'but', 'opposition / restriction', 'alternative', 'temps'];
+const NVA = ['un nom', 'un verbe', 'un adjectif'];
+const DP = ['un déterminant', 'un pronom'];
+const PD = ['une préposition', 'un déterminant'];
+const PA = ['une préposition', 'un adverbe'];
+
+const MODULES = [
+/* ───────────── 0. ÉCHAUFFEMENT ───────────── */
+{
+  id: 'warm', cls: 'mix', title: 'Échauffement : quelle classe ?', minutes: 8,
+  intro: 'La question de l’examen, encore et encore : quelle est la classe du mot en gras ?',
+  defaultHint: 'Le test de base : par quel mot connu peux-tu le remplacer ? Le mot de remplacement a la même classe. Ensuite vérifie : devant un nom (dét.), devant un verbe (pronom), ne… pas possible (verbe), effaçable (adverbe), complément à droite (prép.).',
+  lesson: [
+    { h: 'Le réflexe à avoir',
+      b: '<p>Pour chaque mot en gras, pose-toi ces questions dans l’ordre :</p><p class="ex">① Peut-il être <b>remplacé</b> par un mot dont je connais la classe ?<br>② Est-il <b>devant un nom</b> (déterminant) ou <b>devant / après un verbe</b> (pronom) ?<br>③ Peut-on l’encadrer par <b>ne… pas</b> ou changer son temps (verbe) ?<br>④ Peut-on l’<b>effacer</b> ? (adverbe) A-t-il un <b>complément à droite</b> ? (préposition)<br>⑤ Relie-t-il deux éléments sans pouvoir bouger ? (conjonction)</p><p>22 phrases, aucune vue dans la phase 1. Go.</p>' }
+  ],
+  items: [
+    { t:'mc', tag:'adv', q:'« Le chat dort <b>paisiblement</b> sur le divan. »', opts: CLASS_OPTS, a:5, why:'→ <i>dort <b>tranquillement</b></i> ✓ ; effaçable ; en <i>-ment</i> → adverbe (manière).' },
+    { t:'mc', tag:'det', q:'« <b>Cette</b> histoire me fait rire. »', opts: CLASS_OPTS, a:1, why:'Devant le nom <i>histoire</i> → <i><b>Ton</b> histoire</i> ✓ → déterminant démonstratif.' },
+    { t:'mc', tag:'verbe', q:'« Mes amis <b>arrivent</b> demain. »', opts: CLASS_OPTS, a:4, why:'<i>Mes amis <u>n’</u>arrivent <u>pas</u></i> ✓ ; <i>arrivaient</i> ✓ → verbe.' },
+    { t:'mc', tag:'nom', q:'« Nous avons visité un <b>village</b> minuscule. »', opts: CLASS_OPTS, a:0, why:'Déterminant <i>un</i> devant ; → <i>un <b>hameau</b> minuscule</i> ✓ → nom.' },
+    { t:'mc', tag:'adj', q:'« Le film était <b>ennuyant</b>. »', opts: CLASS_OPTS, a:2, why:'→ <i>était <b>long</b></i> ✓ ; <i>très ennuyant</i> ✓ ; s’accorde (<i>les films étaient ennuyants</i>) → adjectif (participe).' },
+    { t:'mc', tag:'pro', q:'« <b>Ils</b> partent en voyage. »', opts: CLASS_OPTS, a:3, why:'Sujet du verbe ; remplace un GN (<i>Mes amis partent</i>) → pronom personnel.' },
+    { t:'mc', tag:'prep', q:'« Je reste <b>chez</b> ma tante. »', opts: CLASS_OPTS, a:6, why:'Complément à droite (<i>ma tante</i>) ; → <i>reste <b>avec</b> ma tante</i> ✓ → préposition.' },
+    { t:'mc', tag:'conj', q:'« Tu viens <b>ou</b> tu restes ? »', opts: CLASS_OPTS, a:7, why:'Relie deux phrases ; → <i>Tu viens <b>et</b> tu restes</i> ✓ ; impossible à déplacer → conjonction.' },
+    { t:'mc', tag:'adv', q:'« Elle chante <b>fort</b>. »', opts: CLASS_OPTS, a:5, why:'Modifie le verbe <i>chante</i> ; → <i>chante <b>doucement</b></i> ✓ ; invariable (<i>elles chantent fort</i>) → adverbe.' },
+    { t:'mc', tag:'det', q:'« <b>Plusieurs</b> élèves ont réussi. »', opts: CLASS_OPTS, a:1, why:'Devant le nom <i>élèves</i> → <i><b>Des</b> élèves</i> ✓ → déterminant indéfini.' },
+    { t:'mc', tag:'pro', q:'« <b>Plusieurs</b> ont réussi. »', opts: CLASS_OPTS, a:3, why:'Aucun nom après lui : il remplace <i>plusieurs élèves</i> et il est sujet du verbe → pronom indéfini. Même mot, autre classe !' },
+    { t:'mc', tag:'nom', q:'« Sa <b>peur</b> des araignées est connue. »', opts: CLASS_OPTS, a:0, why:'Déterminant <i>Sa</i> devant ; → <i>Sa <b>crainte</b></i> ✓ → nom.' },
+    { t:'mc', tag:'prep', q:'« Le train est parti <b>sans</b> nous. »', opts: CLASS_OPTS, a:6, why:'Complément <i>nous</i> à droite ; → <i>parti <b>avec</b> nous</i> ✓ → préposition (exclusion).' },
+    { t:'mc', tag:'det', q:'« J’ai acheté <b>de</b> belles pommes. »', opts: CLASS_OPTS, a:1, why:'Test : <i>J’ai acheté <b>une</b> belle pomme</i> ✓ → déterminant.' },
+    { t:'mc', tag:'prep', q:'« Un panier <b>de</b> pommes. »', opts: CLASS_OPTS, a:6, why:'Test : <i>Un panier <b>une</b> pomme</i> ✗ → préposition.' },
+    { t:'mc', tag:'conj', q:'« <b>Lorsque</b> la cloche sonne, on sort. »', opts: CLASS_OPTS, a:7, why:'→ <i><b>Quand</b> la cloche sonne</i> ✓ ; introduit une phrase dans une autre → conjonction de subordination.' },
+    { t:'mc', tag:'adv', q:'« Elle est <b>très</b> gentille. »', opts: CLASS_OPTS, a:5, why:'Intensité ; modifie l’adjectif <i>gentille</i> ; effaçable → adverbe.' },
+    { t:'mc', tag:'pro', q:'« Ma sœur <b>me</b> prête son vélo. »', opts: CLASS_OPTS, a:3, why:'Devant le verbe <i>prête</i> ; désigne la personne qui parle → pronom (de la communication).' },
+    { t:'mc', tag:'adj', q:'« Un vent <b>froid</b> souffle. »', opts: CLASS_OPTS, a:2, why:'→ <i>un vent <b>fort</b></i> ✓ ; s’accorde (<i>une bise froid<b>e</b></i>) → adjectif.' },
+    { t:'mc', tag:'det', q:'« <b>Leur</b> maison est immense. »', opts: CLASS_OPTS, a:1, why:'Devant le nom <i>maison</i> → <i><b>La</b> maison</i> ✓ → déterminant possessif.' },
+    { t:'mc', tag:'pro', q:'« Je <b>leur</b> parle souvent. »', opts: CLASS_OPTS, a:3, why:'Devant le verbe <i>parle</i> ; = <i>à eux</i> → pronom personnel.' },
+    { t:'mc', tag:'verbe', q:'« Nous <b>avons ri</b> toute la soirée. »', opts: CLASS_OPTS, a:4, why:'Temps composé (auxiliaire <i>avons</i> + participe passé <i>ri</i>) ; <i>Nous <u>n’</u>avons <u>pas</u> ri</i> ✓ → verbe.' }
+  ]
+},
+
+/* ───────────── 1. NOM OU VERBE ───────────── */
+{
+  id: 'homo', cls: 'nom', title: 'Nom, verbe ou adjectif ? Les homonymes', minutes: 6,
+  intro: 'Le même mot change de classe selon la phrase. Le test, pas l’instinct.',
+  defaultHint: 'Nom : un déterminant devant et on peut le remplacer par un autre nom. Verbe : ne… pas possible et on peut changer le temps. Adjectif : on peut le remplacer par un autre adjectif et il s’accorde.',
+  lesson: [
+    { h: 'Rappel : trois tests',
+      b: '<p class="ex"><b>Nom</b> → déterminant devant + remplacement par un nom : <i>la <b>porte</b></i> → <i>la fenêtre</i> ✓<br><b>Verbe</b> → ne… pas + autre temps : <i>elle <b>porte</b></i> → <i>elle ne porte pas</i>, <i>elle portait</i> ✓<br><b>Adjectif</b> → remplacement par un adjectif + accord : <i>un sourire <b>charmant</b></i> → <i>un sourire radieux</i>, <i>une voix charmante</i> ✓</p><p>Ne te fie jamais à la forme du mot : <i>vol / volent</i>, <i>ferme / ferme</i>, <i>livre / livre</i>… Regarde ce qu’il y a autour.</p>' }
+  ],
+  items: [
+    { t:'mc', tag:'nom', q:'« Le <b>vol</b> a été annulé. »<br><i>vol</i> est…', opts: NVA, a:0, why:'<i>Le vol</i> → <i>Le <b>départ</b></i> ✓ ; déterminant <i>Le</i> → nom.' },
+    { t:'mc', tag:'verbe', q:'« Les oiseaux <b>volent</b> vers le sud. »<br><i>volent</i> est…', opts: NVA, a:1, why:'<i>Les oiseaux <u>ne</u> volent <u>pas</u></i> ✓ ; <i>volaient</i> ✓ → verbe.' },
+    { t:'mc', tag:'verbe', q:'« Elle <b>porte</b> une robe rouge. »<br><i>porte</i> est…', opts: NVA, a:1, why:'<i>Elle <u>ne</u> porte <u>pas</u></i> ✓ ; <i>elle portait</i> ✓ → verbe.' },
+    { t:'mc', tag:'nom', q:'« La <b>porte</b> grince. »<br><i>porte</i> est…', opts: NVA, a:0, why:'<i>La <b>fenêtre</b> grince</i> ✓ ; déterminant <i>La</i> → nom. Et c’est le donneur d’accord du verbe <i>grince</i>.' },
+    { t:'mc', tag:'verbe', q:'« Je <b>ferme</b> la fenêtre. »<br><i>ferme</i> est…', opts: NVA, a:1, why:'<i>Je <u>ne</u> ferme <u>pas</u></i> ✓ → verbe.' },
+    { t:'mc', tag:'nom', q:'« Une <b>ferme</b> immense. »<br><i>ferme</i> est…', opts: NVA, a:0, why:'<i>Une <b>maison</b> immense</i> ✓ ; déterminant <i>Une</i> → nom.' },
+    { t:'mc', tag:'nom', q:'« Le <b>livre</b> est sur la table. »<br><i>livre</i> est…', opts: NVA, a:0, why:'<i>Le <b>cahier</b> est sur la table</i> ✓ → nom.' },
+    { t:'mc', tag:'verbe', q:'« Le facteur <b>livre</b> le colis. »<br><i>livre</i> est…', opts: NVA, a:1, why:'<i>Le facteur <u>ne</u> livre <u>pas</u> le colis</i> ✓ ; <i>livrait</i> ✓ → verbe.' },
+    { t:'mc', tag:'nom', q:'« Le <b>marché</b> est bondé. »<br><i>marché</i> est…', opts: NVA, a:0, why:'<i>Le <b>magasin</b> est bondé</i> ✓ ; déterminant <i>Le</i> → nom.' },
+    { t:'mc', tag:'verbe', q:'« J’ai <b>marché</b> longtemps. »<br><i>marché</i> est…', opts: NVA, a:1, why:'<i>ai marché</i> = temps composé (auxiliaire + participe passé) ; <i>Je <u>n’</u>ai <u>pas</u> marché</i> ✓ → verbe.' },
+    { t:'mc', tag:'adj', q:'« Un sourire <b>charmant</b>. »<br><i>charmant</i> est…', opts: NVA, a:2, why:'→ <i>un sourire <b>radieux</b></i> ✓ ; <i>très charmant</i> ✓ ; s’accorde (<i>une voix charmant<b>e</b></i>) → adjectif.' }
+  ]
+},
+
+/* ───────────── 2. DÉTERMINANT OU PRONOM ───────────── */
+{
+  id: 'detpro', cls: 'det', title: 'Déterminant ou pronom ?', minutes: 6,
+  intro: 'le, la, les, l’, leur, certains, chaque / chacun… le même mot, deux classes.',
+  defaultHint: 'Regarde le mot qui suit : un NOM → déterminant. Un VERBE (ou rien) → pronom. Le pronom peut être remplacé par son antécédent.',
+  lesson: [
+    { h: 'Rappel : regarde ce qui suit',
+      b: '<p class="ex">Marly a appelé <b>les</b> secours. → devant un <b>nom</b> = déterminant<br>Marly <b>les</b> a appelés. → devant un <b>verbe</b> = pronom (→ <i>a appelé les secours</i>)</p><p>Même logique pour <i>leur</i> (<i>leur maison</i> / <i>je leur parle</i>), <i>la</i>, <i>l’</i>, et pour <i>certains, plusieurs, chaque/chacun, tout</i> : avec un nom après = déterminant ; seul = pronom.</p>' }
+  ],
+  items: [
+    { t:'mc', tag:'det', q:'« <b>La</b> neige tombe. »<br><i>La</i> est…', opts: DP, a:0, why:'Devant le nom <i>neige</i> → déterminant défini.' },
+    { t:'mc', tag:'pro', q:'« Je <b>la</b> regarde tomber. »<br><i>la</i> est…', opts: DP, a:1, why:'Devant le verbe <i>regarde</i> ; remplace <i>la neige</i> → pronom.' },
+    { t:'mc', tag:'det', q:'« <b>Les</b> enfants jouent dehors. »<br><i>Les</i> est…', opts: DP, a:0, why:'Devant le nom <i>enfants</i> → déterminant.' },
+    { t:'mc', tag:'pro', q:'« Leur mère <b>les</b> appelle. »<br><i>les</i> est…', opts: DP, a:1, why:'Devant le verbe <i>appelle</i> ; = <i>les enfants</i> → pronom.' },
+    { t:'mc', tag:'det', q:'« <b>Leur</b> mère les appelle. »<br><i>Leur</i> est…', opts: DP, a:0, why:'Devant le nom <i>mère</i> → déterminant possessif (→ <i><b>Sa</b> mère</i>).' },
+    { t:'mc', tag:'pro', q:'« Je <b>leur</b> donne une collation. »<br><i>leur</i> est…', opts: DP, a:1, why:'Devant le verbe <i>donne</i> ; = <i>aux enfants</i> → pronom.' },
+    { t:'mc', tag:'det', q:'« <b>Certains</b> élèves sont absents. »<br><i>Certains</i> est…', opts: DP, a:0, why:'Devant le nom <i>élèves</i> → déterminant indéfini.' },
+    { t:'mc', tag:'pro', q:'« <b>Certains</b> sont absents. »<br><i>Certains</i> est…', opts: DP, a:1, why:'Pas de nom après ; il remplace <i>certains élèves</i> et il est sujet → pronom indéfini.' },
+    { t:'mc', tag:'det', q:'« <b>L’</b>autobus est en retard. »<br><i>L’</i> est…', opts: DP, a:0, why:'Devant le nom <i>autobus</i> → déterminant (le → l’ devant une voyelle).' },
+    { t:'mc', tag:'pro', q:'« Je <b>l’</b>attends depuis dix minutes. »<br><i>l’</i> est…', opts: DP, a:1, why:'Devant le verbe <i>attends</i> ; = <i>l’autobus</i> → pronom.' },
+    { t:'mc', tag:'det', q:'« <b>Chaque</b> élève a un cahier. »<br><i>Chaque</i> est…', opts: DP, a:0, why:'Devant le nom <i>élève</i> → déterminant. (<i>Chaque</i> est toujours un déterminant.)' },
+    { t:'mc', tag:'pro', q:'« <b>Chacun</b> a un cahier. »<br><i>Chacun</i> est…', opts: DP, a:1, why:'Seul, sujet du verbe <i>a</i> → pronom indéfini. (<i>Chacun</i> est toujours un pronom.)' }
+  ]
+},
+
+/* ───────────── 3. « DE » ET COMPAGNIE ───────────── */
+{
+  id: 'de', cls: 'prep', title: '« de » et compagnie', minutes: 6,
+  intro: 'de : préposition ou déterminant ? derrière, depuis : préposition ou adverbe ?',
+  defaultHint: 'Pour « de » : mets le nom au singulier et remplace « de » par un/une ou le/la. Phrase correcte → déterminant ; incorrecte → préposition. Pour derrière/depuis/avant : complément à droite → préposition ; seul et effaçable → adverbe.',
+  lesson: [
+    { h: 'Rappel : les deux tests',
+      b: '<p><b>« de » :</b> ① nom à sa droite → ② au singulier → ③ remplace <i>de</i> par <i>un/une</i> ou <i>le/la</i>.</p><p class="ex">J’ai acheté <b>de</b> belles pommes. → <i>une belle pomme</i> ✓ → déterminant<br>Un panier <b>de</b> pommes. → <i>un panier une pomme</i> ✗ → préposition</p><p><b>derrière, depuis, avant, devant :</b> un complément à droite → préposition ; seul et effaçable → adverbe.</p><p class="ex">Il marche <b>derrière</b> le groupe. → préposition · Il marche <b>derrière</b>. → adverbe</p>' }
+  ],
+  items: [
+    { t:'mc', tag:'prep', q:'« Il y a <b>de</b> gros nuages. »<br><i>de</i> est…', opts: PD, a:1, why:'Test : <i>Il y a <b>un</b> gros nuage</i> ✓ → déterminant.' },
+    { t:'mc', tag:'prep', q:'« Une tasse <b>de</b> thé. »<br><i>de</i> est…', opts: PD, a:0, why:'Test : <i>Une tasse <b>un</b> thé</i> ✗ → préposition.' },
+    { t:'mc', tag:'prep', q:'« Nous avons <b>de</b> bons amis. »<br><i>de</i> est…', opts: PD, a:1, why:'Test : <i>Nous avons <b>un</b> bon ami</i> ✓ → déterminant.' },
+    { t:'mc', tag:'prep', q:'« Le chien <b>de</b> ma voisine jappe. »<br><i>de</i> est…', opts: PD, a:0, why:'Test : <i>Le chien <b>la</b> voisine</i> ✗ → préposition (appartenance).' },
+    { t:'mc', tag:'prep', q:'« Elle a reçu <b>de</b> jolies fleurs. »<br><i>de</i> est…', opts: PD, a:1, why:'Test : <i>Elle a reçu <b>une</b> jolie fleur</i> ✓ → déterminant.' },
+    { t:'mc', tag:'prep', q:'« Un bouquet <b>de</b> fleurs. »<br><i>de</i> est…', opts: PD, a:0, why:'Test : <i>Un bouquet <b>une</b> fleur</i> ✗ → préposition.' },
+    { t:'mc', tag:'prep', q:'« Je n’ai pas <b>de</b> devoirs ce soir. »<br><i>de</i> est…', opts: PD, a:1, why:'Test : <i>Je n’ai pas <b>un</b> devoir</i> ✓ → déterminant (après une négation, <i>des</i> devient <i>de</i>).' },
+    { t:'mc', tag:'prep', q:'« Il revient <b>de</b> Montréal. »<br><i>de</i> est…', opts: PD, a:0, why:'Aucun déterminant possible ici (<i>revient <b>la</b> Montréal</i> ✗) → préposition (origine).' },
+    { t:'mc', tag:'adv', q:'« Il marche <b>derrière</b>. »<br><i>derrière</i> est…', opts: PA, a:1, why:'Rien après lui ; effaçable (<i>Il marche.</i>) → adverbe.' },
+    { t:'mc', tag:'prep', q:'« Il marche <b>derrière</b> le groupe. »<br><i>derrière</i> est…', opts: PA, a:0, why:'Complément <i>le groupe</i> à droite → préposition.' },
+    { t:'mc', tag:'adv', q:'« Je n’ai rien mangé <b>depuis</b>. »<br><i>depuis</i> est…', opts: PA, a:1, why:'Seul en fin de phrase, effaçable → adverbe.' },
+    { t:'mc', tag:'prep', q:'« Je n’ai rien mangé <b>depuis</b> ce matin. »<br><i>depuis</i> est…', opts: PA, a:0, why:'Complément <i>ce matin</i> → préposition (temps).' }
+  ]
+},
+
+/* ───────────── 4. CHASSE AUX ADVERBES ───────────── */
+{
+  id: 'advhunt', cls: 'adv', title: 'Chasse aux adverbes', minutes: 8,
+  intro: 'Ton point faible de la phase 1. Textes neufs, mêmes pièges.',
+  defaultHint: 'Efface le mot : la phrase tient ? Remplace-le par un autre adverbe (très, vraiment, ici, souvent) ? Il n’a pas de déterminant devant lui ? Alors c’est un adverbe. Un mot précédé d’un déterminant est un nom ; « plusieurs », « certains » devant un nom sont des déterminants.',
+  lesson: [
+    { h: 'Rappel : les trois tests, et les pièges',
+      b: '<p>① <b>Effaçable</b> ? ② <b>Remplaçable</b> par un autre adverbe ? ③ <b>Invariable</b> ?</p><p class="warn">Pièges de la phase 1 : <i>nos <b>villes</b></i>, <i>une <b>matière</b></i> → noms (déterminant devant). <i><b>Plusieurs</b> personnes</i>, <i><b>Certains</b> objets</i> → déterminants (nom après). Trouver un synonyme ne suffit pas : vérifie la classe.</p><p>Et n’oublie pas la négation : <i>ne… pas</i>, <i>ne… jamais</i> = un adverbe composé (deux mots à taper).</p>' }
+  ],
+  items: [
+    { t:'tap', tag:'adv', q:'Tape sur les <b>adverbes</b> (il y en a 3).',
+      s:'Hier, mon frère a couru très vite pour attraper son autobus.', a:['hier','très','vite'],
+      why:'<i>Hier</i> (temps), <i>très</i> (intensité, modifie <i>vite</i>), <i>vite</i> (manière, modifie <i>a couru</i>). <i>mon</i> et <i>son</i> sont des déterminants ; <i>pour</i> une préposition.' },
+    { t:'tap', tag:'adv', q:'Tape sur les <b>adverbes</b> (il y en a 2).',
+      s:'Les élèves écoutent attentivement la consigne et travaillent ensuite en silence.', a:['attentivement','ensuite'],
+      why:'<i>attentivement</i> (manière), <i>ensuite</i> (temps). <i>silence</i> est un nom introduit par la préposition <i>en</i> ; <i>et</i> est une conjonction.' },
+    { t:'tap', tag:'adv', q:'Tape sur les <b>adverbes</b> (il y en a 3).',
+      s:'Aujourd’hui, la neige fond rapidement : le printemps arrive enfin !', a:['aujourd’hui','rapidement','enfin'],
+      why:'<i>Aujourd’hui</i> (temps), <i>rapidement</i> (manière), <i>enfin</i> (temps). <i>neige</i> et <i>printemps</i> sont des noms (<i>la</i>, <i>le</i>).' },
+    { t:'tap', tag:'adv', q:'Tape sur les <b>adverbes</b> (3 mots, dont une négation en deux mots).',
+      s:'Certaines personnes ne recyclent jamais leurs bouteilles, malheureusement.', a:['ne','jamais','malheureusement'],
+      why:'<i>ne… jamais</i> (négation, composé) et <i>malheureusement</i> (appréciation). <b>Piège :</b> <i>Certaines</i> est un déterminant (devant <i>personnes</i>) ; <i>leurs</i> aussi.',
+      hint:'« Certaines » est suivi d’un nom… ce n’est donc pas un adverbe.' },
+    { t:'tap', tag:'adv', q:'Tape sur les <b>adverbes</b> (il y en a 3).',
+      s:'Plusieurs voisins arrivent toujours tôt à la réunion ; ils sont vraiment ponctuels.', a:['toujours','tôt','vraiment'],
+      why:'<i>toujours</i> (temps), <i>tôt</i> (temps), <i>vraiment</i> (intensité, modifie <i>ponctuels</i>). <b>Piège :</b> <i>Plusieurs</i> est un déterminant (devant <i>voisins</i>).' },
+    { t:'tap', tag:'adv', q:'Tape sur les <b>adverbes</b> (il y en a 2).',
+      s:'Nous avons tellement ri que nous avons presque oublié la matière du cours.', a:['tellement','presque'],
+      why:'<i>tellement</i> (intensité), <i>presque</i> (intensité). <b>Piège :</b> <i>matière</i> est un nom (<i>la</i> matière) ; <i>que</i> est une conjonction.' },
+    { t:'mc', tag:'adv', q:'Sens de <b>Bientôt</b> : « <b>Bientôt</b> les vacances ! »', opts: SENS_ADV, a:3, why:'<i>bientôt, hier, aujourd’hui, toujours</i> → temps.' },
+    { t:'mc', tag:'adv', q:'Sens de <b>doucement</b> : « Il parle <b>doucement</b>. »', opts: SENS_ADV, a:5, why:'Comment parle-t-il ? → manière.' },
+    { t:'mc', tag:'adv', q:'Sens de <b>Non</b> : « <b>Non</b>, je ne viens pas. »', opts: SENS_ADV, a:1, why:'<i>non, ne… pas, ne… jamais</i> → négation.' },
+    { t:'mc', tag:'adv', q:'Sens de <b>Ailleurs</b> : « <b>Ailleurs</b>, il fait plus chaud. »', opts: SENS_ADV, a:4, why:'<i>ailleurs, ici, dehors, partout</i> → lieu.' },
+    { t:'mc', tag:'adv', q:'Sens de <b>Cependant</b> : « Il est tard. <b>Cependant</b>, je continue. »', opts: SENS_ADV, a:2, why:'<i>cependant, néanmoins, toutefois</i> → opposition. C’est aussi un marqueur de relation.' },
+    { t:'type', tag:'adv', q:'Forme l’adverbe en <b>-ment</b> : « de façon lente » → …', a:['lentement'], placeholder:'…ment', why:'lent → lent<b>e</b> → lente<b>ment</b>.' },
+    { t:'type', tag:'adv', q:'Forme l’adverbe en <b>-ment</b> : « de façon heureuse » → …', a:['heureusement'], placeholder:'…ment', why:'heureux → heureus<b>e</b> → heureuse<b>ment</b>.' },
+    { t:'type', tag:'adv', q:'Forme l’adverbe en <b>-ment</b> : « de manière franche » → …', a:['franchement'], placeholder:'…ment', why:'franc → franch<b>e</b> → franche<b>ment</b>.' }
+  ]
+},
+
+/* ───────────── 5. ADJECTIF ───────────── */
+{
+  id: 'adj2', cls: 'adj', title: 'Adjectif : accords et pièges', minutes: 6,
+  intro: 'Accorde avec le bon donneur, distingue qualifiant / classifiant et adjectif / participe présent.',
+  defaultHint: 'Trouve d’abord le donneur (nom ou pronom) : son genre et son nombre décident. Qualifiant : « très » possible. Participe présent (verbe) : « ne… pas » possible.',
+  lesson: [
+    { h: 'Rappel',
+      b: '<p><b>Accord :</b> l’adjectif reçoit le genre et le nombre du nom ou du pronom qu’il précise — pas du mot le plus proche ! <i>un paquet de rouages multicolore<b>s</b></i> (→ rouages).</p><p><b>Qualifiant ou classifiant :</b> <i>très</i> possible → qualifiant (<i>très rapide</i> ✓) ; impossible → classifiant (<i>très électrique</i> ✗).</p><p><b>Adjectif ou participe présent :</b> <i>ne… pas</i> possible → verbe (<i>en <u>ne</u> lisant <u>pas</u></i> ✓) ; impossible → adjectif (<i>une histoire ne amusante pas</i> ✗).</p>' }
+  ],
+  items: [
+    { t:'mc', tag:'adj', q:'Accorde : « des chansons (<b>joyeux</b>) »', opts:['joyeux', 'joyeuse', 'joyeuses'], a:2, why:'<i>chansons</i> f. pl. → joyeu<b>ses</b>.' },
+    { t:'mc', tag:'adj', q:'Accorde : « une (<b>beau</b>) journée »', opts:['beau', 'belle', 'beaux'], a:1, why:'<i>journée</i> f. s. → <b>belle</b> (forme irrégulière du féminin).' },
+    { t:'mc', tag:'adj', q:'Accorde : « des garçons (<b>sportif</b>) »', opts:['sportif', 'sportifs', 'sportives'], a:1, why:'<i>garçons</i> m. pl. → sportif<b>s</b>.' },
+    { t:'type', tag:'adj', q:'Accorde et écris : « une équipe (<b>gagnant</b>) » → « une équipe … »', a:['gagnante'], placeholder:'gagn…', why:'<i>équipe</i> f. s. → gagnant<b>e</b>. Adjectif participe (issu de <i>gagner</i>).' },
+    { t:'mc', tag:'adj', q:'Accorde : « Ils sont (<b>fatigué</b>). »', opts:['fatigué', 'fatigués', 'fatiguées'], a:1, why:'Le donneur est le pronom <i>Ils</i> (m. pl.) → fatigué<b>s</b>.' },
+    { t:'mc', tag:'adj', q:'Accorde : « Une boîte de crayons (<b>neuf</b>). »', opts:['neuf', 'neuve', 'neufs'], a:2, why:'L’adjectif précise <i>crayons</i> (m. pl.), pas <i>boîte</i> → neuf<b>s</b>. Attention au mot le plus proche : il n’est pas toujours le donneur.' },
+    { t:'mc', tag:'adj', q:'« une voiture <b>électrique</b> » — l’adjectif est…', opts:['qualifiant', 'classifiant'], a:1, why:'<i>très électrique</i> ✗ ; il classe la voiture dans une catégorie → classifiant.' },
+    { t:'mc', tag:'adj', q:'« une voiture <b>rapide</b> » — l’adjectif est…', opts:['qualifiant', 'classifiant'], a:0, why:'<i>très rapide</i> ✓ → qualifiant (une qualité).' },
+    { t:'mc', tag:'adj', q:'« la cuisine <b>italienne</b> » — l’adjectif est…', opts:['qualifiant', 'classifiant'], a:1, why:'<i>très italienne</i> ✗ ; catégorie → classifiant. Il est directement après le nom.' },
+    { t:'mc', tag:'adj', q:'« Les enfants <b>riant</b> dans la cour dérangent la classe. »<br><i>riant</i> est…', opts:['un adjectif', 'un verbe au participe présent'], a:1, why:'<i>Les enfants <u>ne</u> riant <u>pas</u> dans la cour</i> ✓ ; il a un complément (<i>dans la cour</i>) et ne s’accorde pas → participe présent.' },
+    { t:'mc', tag:'adj', q:'« une histoire <b>amusante</b> »<br><i>amusante</i> est…', opts:['un adjectif', 'un verbe au participe présent'], a:0, why:'<i>une histoire ne amusante pas</i> ✗ ; s’accorde (f. s.) ; <i>très amusante</i> ✓ → adjectif.' },
+    { t:'mc', tag:'adj', q:'« En <b>lisant</b> ce roman, j’ai pleuré. »<br><i>lisant</i> est…', opts:['un adjectif', 'un verbe au participe présent'], a:1, why:'<i>En <u>ne</u> lisant <u>pas</u> ce roman</i> ✓ → participe présent.' }
+  ]
+},
+
+/* ───────────── 6. PRONOMS ───────────── */
+{
+  id: 'pro2', cls: 'pro', title: 'Pronoms : catégories et antécédents', minutes: 6,
+  intro: 'Qui remplace quoi ? Et de quelle catégorie ?',
+  defaultHint: 'Pronom de reprise → cherche l’antécédent avant lui dans le texte et remplace-le. « en » reprend un groupe en de/des ; « y » reprend un lieu (à…). Catégories : personnel, démonstratif (celui, ceux…), relatif (qui, que, dont, où), indéfini (quelqu’un, personne…), possessif (le mien…).',
+  lesson: [
+    { h: 'Rappel',
+      b: '<div class="tbl"><div><b>Personnel</b> — il, elle, ils, elles, le, la, les, l’, lui, leur, en, y, me, te, nous, vous</div><div><b>Démonstratif</b> — celui, celle, ceux, celles, celui-ci, ce, c’, ça</div><div><b>Relatif</b> — qui, que, qu’, dont, où, lequel</div><div><b>Indéfini</b> — quelqu’un, personne, chacun, plusieurs, certains, tout</div><div><b>Possessif</b> — le mien, le tien, la sienne, les nôtres…</div></div><p class="ex"><b>en</b> : <i>Tu veux des fraises ? J’<b>en</b> veux.</i> (des fraises)<br><b>y</b> : <i>Tu vas à la piscine ? J’<b>y</b> vais.</i> (à la piscine)</p>' }
+  ],
+  items: [
+    { t:'mc', tag:'pro', q:'« Marie a perdu son sac. <b>Elle</b> le cherche partout. »<br>Antécédent de <i>Elle</i> ?', opts:['Marie', 'son sac', 'partout'], a:0, why:'→ <i><b>Marie</b> le cherche partout</i> ✓.' },
+    { t:'mc', tag:'pro', q:'« Marie a perdu son sac. Elle <b>le</b> cherche partout. »<br>Antécédent de <i>le</i> ?', opts:['Marie', 'son sac', 'partout'], a:1, why:'→ <i>Elle cherche <b>son sac</b> partout</i> ✓. Devant le verbe <i>cherche</i> → pronom, pas déterminant.' },
+    { t:'mc', tag:'pro', q:'« Voici le vélo <b>que</b> j’ai acheté. »<br>Catégorie de <i>que</i> ?', opts: CAT_PRO, a:2, why:'<i>qui, que, dont, où</i> → relatif. Antécédent : <i>le vélo</i>.' },
+    { t:'mc', tag:'pro', q:'« <b>Ceux</b> qui ont fini peuvent sortir. »<br>Catégorie de <i>Ceux</i> ?', opts: CAT_PRO, a:1, why:'<i>celui, celle, ceux, celles</i> → démonstratif.' },
+    { t:'mc', tag:'pro', q:'« <b>Quelqu’un</b> a frappé à la porte. »<br>Catégorie de <i>Quelqu’un</i> ?', opts: CAT_PRO, a:3, why:'<i>quelqu’un, personne, chacun</i> → indéfini.' },
+    { t:'mc', tag:'pro', q:'« Ce livre est <b>le tien</b>. »<br>Catégorie de <i>le tien</i> ?', opts: CAT_PRO, a:4, why:'<i>le mien, le tien, la sienne, les nôtres</i> → possessif.' },
+    { t:'mc', tag:'pro', q:'« <b>Nous</b> partons à midi. »<br><i>Nous</i> est un pronom…', opts:['de reprise', 'de la communication'], a:1, why:'1<sup>re</sup> personne : il désigne les personnes qui parlent → communication.' },
+    { t:'mc', tag:'pro', q:'« Tu vas à la piscine ? Oui, j’<b>y</b> vais. »<br><i>y</i> remplace…', opts:['à la piscine', 'tu', 'oui'], a:0, why:'<i>y</i> reprend un lieu introduit par <i>à</i> : <i>je vais <b>à la piscine</b></i>.' },
+    { t:'mc', tag:'pro', q:'« Tu veux des fraises ? Oui, j’<b>en</b> veux. »<br><i>en</i> remplace…', opts:['des fraises', 'tu', 'oui'], a:0, why:'<i>en</i> reprend un groupe en <i>de/des</i> : <i>je veux <b>des fraises</b></i>.' },
+    { t:'mc', tag:'pro', q:'« Julie et moi aimons <b>la lecture</b>. Nous ___ adorons. »', opts:['l’', 'en', 'y', 'lui'], a:0, why:'<i>la lecture</i> (f. s., complément direct) → <i>la</i> → <b>l’</b> devant la voyelle de <i>adorons</i>.' },
+    { t:'mc', tag:'pro', q:'« Paul téléphone <b>à ses parents</b>. Il ___ téléphone. »', opts:['les', 'leur', 'en', 'y'], a:1, why:'<i>à ses parents</i> (à + personnes, pluriel) → <b>leur</b>.' },
+    { t:'mc', tag:'pro', q:'« <b>Mon frère et moi</b> partons demain. » → « ___ partons demain. »', opts:['Ils', 'Nous', 'Vous', 'Eux'], a:1, why:'<i>moi</i> + quelqu’un = <b>nous</b> (1<sup>re</sup> pers. pl.), qui donne sa personne au verbe <i>partons</i>.' }
+  ]
+},
+
+/* ───────────── 7. CONJONCTIONS ET PRÉPOSITIONS ───────────── */
+{
+  id: 'conjprep', cls: 'conj', title: 'Conjonctions et prépositions : le sens', minutes: 6,
+  intro: 'Quel sens ? Simple ou composée ? Coordination ou subordination ?',
+  defaultHint: 'Remplace par un mot de même classe dont tu connais le sens : quand (temps), car (cause), mais (opposition), pour (but), avec (moyen), sans (exclusion)…',
+  lesson: [
+    { h: 'Rappel',
+      b: '<p><b>Conjonction</b> : relie (coordination : <i>et, ou, mais, car</i>) ou introduit une phrase dans une autre (subordination : <i>parce que, quand, lorsque, dès que, afin que, tandis que</i>). Jamais déplaçable.</p><p><b>Préposition</b> : introduit un complément à sa droite. Sens : temps (<i>depuis, pendant, avant</i>), lieu (<i>chez, dans, près de</i>), cause (<i>grâce à, à cause de</i>), but (<i>pour, afin de</i>), moyen (<i>avec, en</i>), opposition (<i>malgré, au lieu de</i>), exclusion (<i>sans, sauf</i>).</p>' }
+  ],
+  items: [
+    { t:'mc', tag:'conj', q:'« Il pleut, <b>mais</b> nous sortons. »<br>Sens de <i>mais</i> ?', opts: SENS_CONJ, a:3, why:'Opposition. Coordination : elle relie deux phrases.' },
+    { t:'mc', tag:'conj', q:'« J’ai pris mon parapluie <b>parce qu’</b>il pleut. »<br>Sens de <i>parce que</i> ?', opts: SENS_CONJ, a:1, why:'Cause. Subordination, composée.' },
+    { t:'mc', tag:'conj', q:'« Prends ton manteau <b>et</b> tes bottes. »<br><i>et</i> relie…', opts:['des groupes de mots', 'des phrases'], a:0, why:'Deux GN de même fonction (<i>ton manteau</i>, <i>tes bottes</i>). Sens : addition.' },
+    { t:'mc', tag:'conj', q:'« <b>Dès que</b> tu arrives, appelle-moi. »<br><i>Dès que</i> : forme et sens ?', opts:['simple — temps', 'composée — temps', 'composée — but'], a:1, why:'Deux mots → composée ; <i>dès que</i> = aussitôt que → temps.' },
+    { t:'mc', tag:'conj', q:'« Nous partirons <b>quand</b> tu seras prêt. »<br><i>quand</i> est une conjonction de…', opts:['coordination', 'subordination'], a:1, why:'Elle introduit une phrase (<i>tu seras prêt</i>) dans une autre → subordination.' },
+    { t:'mc', tag:'conj', q:'« Elle chante <b>car</b> elle est heureuse. »<br><i>car</i> est une conjonction de…', opts:['coordination', 'subordination'], a:0, why:'<i>car</i> relie deux phrases qui pourraient exister seules → coordination (cause).' },
+    { t:'mc', tag:'prep', q:'« Je lis <b>pour</b> me détendre. »<br>Sens de <i>pour</i> ?', opts: SENS_PREP, a:4, why:'Dans quel but ? → but.' },
+    { t:'mc', tag:'prep', q:'« Il travaille <b>depuis</b> huit heures. »<br>Sens de <i>depuis</i> ?', opts: SENS_PREP, a:1, why:'Temps.' },
+    { t:'mc', tag:'prep', q:'« Elle habite <b>près de</b> l’école. »<br><i>près de</i> : forme et sens ?', opts:['simple — lieu', 'composée — lieu', 'composée — temps'], a:1, why:'Deux mots → composée ; où ? → lieu.' },
+    { t:'mc', tag:'prep', q:'« <b>Malgré</b> la pluie, on joue dehors. »<br>Sens de <i>Malgré</i> ?', opts: SENS_PREP, a:6, why:'<i>malgré, en dépit de, au lieu de</i> → opposition.' },
+    { t:'mc', tag:'prep', q:'« Il a réussi <b>grâce à</b> ses efforts. »<br>Sens de <i>grâce à</i> ?', opts: SENS_PREP, a:3, why:'Cause / origine. Préposition composée.' },
+    { t:'mc', tag:'prep', q:'« Il est parti <b>sans</b> son sac. »<br>Sens de <i>sans</i> ?', opts: SENS_PREP, a:7, why:'<i>sans, sauf, excepté</i> → exclusion.' }
+  ]
+},
+
+/* ───────────── 8. ANALYSE DE PHRASE ───────────── */
+{
+  id: 'analyse', cls: 'mix', title: 'Analyse de phrase', minutes: 8,
+  intro: 'Trois phrases, toutes les classes. Comme dans un texte d’examen.',
+  defaultHint: 'Classe par classe : déterminants devant les noms, noms après les déterminants, adjectifs qui s’accordent, pronoms devant les verbes, adverbes effaçables, prépositions avec complément, conjonctions qui relient.',
+  lesson: [
+    { h: 'Rappel : la méthode',
+      b: '<p>Dans un texte, commence par les <b>verbes</b> (ne… pas), puis les <b>déterminants</b> (devant un nom), puis les <b>noms</b> (après eux). Ce qui reste : adjectifs (accord), pronoms (devant/après un verbe), adverbes (effaçables), prépositions (complément à droite), conjonctions (relient).</p><p>Les trois phrases qui suivent reviennent plusieurs fois, chaque fois pour une classe différente.</p>' }
+  ],
+  items: [
+    { t:'tap', tag:'det', q:'Phrase A — tape sur les <b>déterminants</b> (il y en a 5).',
+      s:'Ce matin, ma petite sœur a trouvé un vieux coffre dans le grenier de nos grands-parents.', a:['ce','ma','un','le','nos'],
+      why:'<i>Ce</i> matin, <i>ma</i> (petite) sœur, <i>un</i> (vieux) coffre, <i>le</i> grenier, <i>nos</i> grands-parents. <i>de</i> est une préposition.' },
+    { t:'tap', tag:'nom', q:'Phrase A — tape sur les <b>noms</b> (il y en a 5).',
+      s:'Ce matin, ma petite sœur a trouvé un vieux coffre dans le grenier de nos grands-parents.', a:['matin','sœur','coffre','grenier','grands-parents'],
+      why:'Chaque nom suit un déterminant (parfois avec un adjectif entre les deux) : matin, sœur, coffre, grenier, grands-parents (nom composé).' },
+    { t:'tap', tag:'adj', q:'Phrase A — tape sur les <b>adjectifs</b> (il y en a 2).',
+      s:'Ce matin, ma petite sœur a trouvé un vieux coffre dans le grenier de nos grands-parents.', a:['petite','vieux'],
+      why:'<i>petite</i> (f. s., accordé avec <i>sœur</i>) et <i>vieux</i> (m. s., avec <i>coffre</i>). Test : <i>ma grande sœur</i>, <i>un joli coffre</i>.' },
+    { t:'tap', tag:'verbe', q:'Phrase A — tape sur le <b>verbe</b> (2 mots : il est à un temps composé).',
+      s:'Ce matin, ma petite sœur a trouvé un vieux coffre dans le grenier de nos grands-parents.', a:['a','trouvé'],
+      why:'<i>a trouvé</i> = auxiliaire + participe passé, un seul verbe. Test : <i>ma sœur <u>n’</u>a <u>pas</u> trouvé</i>.' },
+    { t:'tap', tag:'pro', q:'Phrase B — tape sur les <b>pronoms</b> (il y en a 6).',
+      s:'Elle l’~a ouvert lentement, mais il était vide ; alors elle est retournée dehors et elle a joué avec nous.', a:['elle','l’','il','nous'],
+      why:'<i>Elle</i> (×3, reprend la sœur), <i>l’</i> (reprend le coffre, devant le verbe <i>a ouvert</i>), <i>il</i> (le coffre), <i>nous</i> (communication).' },
+    { t:'tap', tag:'adv', q:'Phrase B — tape sur les <b>adverbes</b> (il y en a 3).',
+      s:'Elle l’~a ouvert lentement, mais il était vide ; alors elle est retournée dehors et elle a joué avec nous.', a:['lentement','alors','dehors'],
+      why:'<i>lentement</i> (manière), <i>alors</i> (conséquence), <i>dehors</i> (lieu). Tous effaçables. <i>vide</i> est un adjectif ; <i>avec</i> une préposition.' },
+    { t:'tap', tag:'conj', q:'Phrase B — tape sur les <b>conjonctions</b> (il y en a 2).',
+      s:'Elle l’~a ouvert lentement, mais il était vide ; alors elle est retournée dehors et elle a joué avec nous.', a:['mais','et'],
+      why:'<i>mais</i> (opposition) et <i>et</i> (addition) relient des phrases. <i>alors</i> est un adverbe (déplaçable).' },
+    { t:'tap', tag:'prep', q:'Phrase C — tape sur les <b>prépositions</b> (il y en a 2).',
+      s:'Depuis que nous habitons ici, nous marchons souvent jusqu’à la rivière pour observer les canards.', a:['jusqu’à','pour'],
+      why:'<i>jusqu’à</i> (+ la rivière : lieu) et <i>pour</i> (+ observer : but). <b>Piège :</b> <i>Depuis que</i> est une conjonction (composée), pas une préposition.' },
+    { t:'tap', tag:'conj', q:'Phrase C — tape sur la <b>conjonction</b> (2 mots : elle est composée).',
+      s:'Depuis que nous habitons ici, nous marchons souvent jusqu’à la rivière pour observer les canards.', a:['depuis','que'],
+      why:'<i>Depuis que</i> introduit la phrase <i>nous habitons ici</i> dans l’autre → conjonction de subordination (temps). → <i>Puisque nous habitons ici</i> ✓.' },
+    { t:'tap', tag:'adv', q:'Phrase C — tape sur les <b>adverbes</b> (il y en a 2).',
+      s:'Depuis que nous habitons ici, nous marchons souvent jusqu’à la rivière pour observer les canards.', a:['ici','souvent'],
+      why:'<i>ici</i> (lieu), <i>souvent</i> (temps). <i>rivière</i> et <i>canards</i> sont des noms (déterminant devant).' }
+  ]
+}
+];
+
+/* ───────────── EXAMEN BLANC 2 ───────────── */
+const EXAM = {
+  title: 'Examen blanc 2', minutes: 9,
+  items: [
+    { t:'mc', tag:'nom',  q:'Classe du mot en gras :<br>« La <b>pluie</b> tombe depuis ce matin. »', opts: CLASS_OPTS, a:0, why:'Nom : déterminant <i>La</i> ; → <i>La <b>neige</b> tombe</i> ✓.' },
+    { t:'mc', tag:'verbe',q:'Classe du mot en gras :<br>« Il <b>pleut</b> depuis ce matin. »', opts: CLASS_OPTS, a:4, why:'Verbe : <i>Il <u>ne</u> pleut <u>pas</u></i> ✓ ; <i>Il pleuvait</i> ✓.' },
+    { t:'mc', tag:'prep', q:'Classe du mot en gras :<br>« <b>Depuis</b> ce matin, il pleut. »', opts: CLASS_OPTS, a:6, why:'Préposition : complément <i>ce matin</i> à droite.' },
+    { t:'mc', tag:'adv',  q:'Classe du mot en gras :<br>« Je n’ai pas dormi <b>depuis</b>. »', opts: CLASS_OPTS, a:5, why:'Adverbe : seul, effaçable (<i>Je n’ai pas dormi.</i>).' },
+    { t:'mc', tag:'adv',  q:'Classe du mot en gras :<br>« Ma grand-mère tricote <b>lentement</b>. »', opts: CLASS_OPTS, a:5, why:'Adverbe : <i>-ment</i>, effaçable, modifie <i>tricote</i>.' },
+    { t:'mc', tag:'det',  q:'Classe du mot en gras :<br>« <b>Ces</b> mitaines sont chaudes. »', opts: CLASS_OPTS, a:1, why:'Déterminant démonstratif : devant le nom <i>mitaines</i>.' },
+    { t:'mc', tag:'pro',  q:'Classe du mot en gras :<br>« Je <b>les</b> porte tous les jours. »', opts: CLASS_OPTS, a:3, why:'Pronom : devant le verbe <i>porte</i> ; reprend <i>ces mitaines</i>.' },
+    { t:'mc', tag:'conj', q:'Classe du groupe en gras :<br>« Elle tricote <b>pendant que</b> je lis. »', opts: CLASS_OPTS, a:7, why:'Conjonction de subordination (composée) : introduit la phrase <i>je lis</i>. → <i>tandis que</i> ✓.' },
+    { t:'mc', tag:'prep', q:'Classe du mot en gras :<br>« Elle tricote <b>pendant</b> la soirée. »', opts: CLASS_OPTS, a:6, why:'Préposition : complément <i>la soirée</i>. Compare avec <i>pendant que</i> + phrase.' },
+    { t:'mc', tag:'adj',  q:'Classe du mot en gras :<br>« Un chandail <b>chaud</b>. »', opts: CLASS_OPTS, a:2, why:'Adjectif : → <i>un chandail <b>doux</b></i> ✓ ; <i>une tuque chaud<b>e</b></i>.' },
+    { t:'mc', tag:'verbe',q:'Classe du groupe en gras :<br>« Nous <b>avons marché</b> deux heures. »', opts: CLASS_OPTS, a:4, why:'Verbe à un temps composé : <i>Nous <u>n’</u>avons <u>pas</u> marché</i> ✓.' },
+    { t:'mc', tag:'adj',  q:'Classe du mot en gras :<br>« Le sentier était <b>boueux</b>. »', opts: CLASS_OPTS, a:2, why:'Adjectif : → <i>était <b>glissant</b></i> ✓ ; <i>très boueux</i> ✓.' },
+    { t:'mc', tag:'pro',  q:'Classe du mot en gras :<br>« <b>Personne</b> n’est venu. »', opts: CLASS_OPTS, a:3, why:'Pronom indéfini : sujet du verbe, aucun nom après lui.' },
+    { t:'mc', tag:'det',  q:'Classe du mot en gras :<br>« <b>Chaque</b> élève reçoit un cahier. »', opts: CLASS_OPTS, a:1, why:'Déterminant : devant le nom <i>élève</i>.' },
+    { t:'mc', tag:'adv',  q:'Classe du mot en gras :<br>« Il court <b>vite</b>. »', opts: CLASS_OPTS, a:5, why:'Adverbe de manière : → <i>court <b>lentement</b></i> ✓ ; invariable.' },
+    { t:'mc', tag:'nom',  q:'Classe du mot en gras :<br>« Il aime la <b>course</b>. »', opts: CLASS_OPTS, a:0, why:'Nom : déterminant <i>la</i> ; → <i>la <b>natation</b></i> ✓.' },
+    { t:'mc', tag:'conj', q:'Classe du mot en gras :<br>« Elle sourit <b>car</b> elle a gagné. »', opts: CLASS_OPTS, a:7, why:'Conjonction de coordination (cause) : relie deux phrases ; non déplaçable.' },
+    { t:'mc', tag:'prep', q:'Classe du groupe en gras :<br>« Elle sourit <b>grâce à</b> sa victoire. »', opts: CLASS_OPTS, a:6, why:'Préposition composée : complément <i>sa victoire</i>.' },
+    { t:'mc', tag:'pro',  q:'Classe du mot en gras :<br>« <b>Celui-ci</b> est mon préféré. »', opts: CLASS_OPTS, a:3, why:'Pronom démonstratif composé, sujet du verbe.' },
+    { t:'mc', tag:'det',  q:'Classe du mot en gras :<br>« J’ai mangé <b>de</b> délicieuses crêpes. »', opts: CLASS_OPTS, a:1, why:'Déterminant : <i>J’ai mangé <b>une</b> délicieuse crêpe</i> ✓.' },
+    { t:'mc', tag:'prep', q:'Classe du mot en gras :<br>« Une assiette <b>de</b> crêpes. »', opts: CLASS_OPTS, a:6, why:'Préposition : <i>Une assiette <b>une</b> crêpe</i> ✗.' },
+    { t:'mc', tag:'det',  q:'Classe du groupe en gras :<br>« <b>Beaucoup de</b> gens aiment le chocolat. »', opts: CLASS_OPTS, a:1, why:'Déterminant composé : devant le nom <i>gens</i> → <i><b>Les</b> gens</i> ✓.' },
+    { t:'mc', tag:'adv',  q:'Classe du mot en gras :<br>« Il parle <b>beaucoup</b>. »', opts: CLASS_OPTS, a:5, why:'Adverbe d’intensité : modifie <i>parle</i>, effaçable, aucun nom après lui.' },
+    { t:'mc', tag:'conj', q:'Classe du mot en gras :<br>« Nous partirons <b>lorsque</b> tout sera prêt. »', opts: CLASS_OPTS, a:7, why:'Conjonction de subordination (temps) : → <i>quand</i> ✓.' },
+    { t:'mc', tag:'adj',  q:'Accorde : « des routes (<b>glissant</b>) »', opts:['glissant', 'glissants', 'glissantes'], a:2, why:'<i>routes</i> f. pl. → glissant<b>es</b>.' },
+    { t:'mc', tag:'verbe',q:'Accorde : « Les <b>élèves</b> de la classe (est / sont) prêts. »', opts:['est', 'sont'], a:1, why:'Noyau du GN sujet : <i>élèves</i> (3<sup>e</sup> pers. pl.) → <b>sont</b>. <i>de la classe</i> n’est pas le noyau.' },
+    { t:'mc', tag:'manip',q:'« Il travaille <b>fort</b>. » → « Il travaille <b>beaucoup</b>. »<br>Quelle manipulation ?', opts: MANIP_OPTS, a:4, why:'Remplacement par un mot de même classe (adverbe → adverbe).' },
+    { t:'mc', tag:'manip',q:'Laquelle de ces classes est <b>invariable</b> ?', opts:['le pronom', 'l’adverbe', 'le déterminant'], a:1, why:'Adverbe, préposition et conjonction ne changent jamais de forme.' },
+    { t:'tap', tag:'adv', q:'Tape sur les <b>adverbes</b> (il y en a 2).',
+      s:'Hier, mes cousins ont joué dehors malgré le froid.', a:['hier','dehors'],
+      why:'<i>Hier</i> (temps), <i>dehors</i> (lieu). <i>malgré</i> est une préposition (+ le froid) ; <i>froid</i> est ici un nom (<i>le</i> froid).' },
+    { t:'tap', tag:'prep', q:'Tape sur les <b>prépositions</b> (4 mots : deux simples et une composée en deux mots).',
+      s:'Ma tante et son chien marchent souvent dans le parc près de chez nous.', a:['dans','près','de','chez'],
+      why:'<i>dans</i> (+ le parc), <i>près de</i> (composée, + chez nous), <i>chez</i> (+ nous). <i>souvent</i> est un adverbe ; <i>et</i> une conjonction.' }
+  ]
+};
+</script>
+<script>
+/* ===== Moteur de l’entraînement ===== */
+(function () {
+  'use strict';
+
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const el = (tag, attrs = {}, ...kids) => {
+    const n = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (k === 'class') n.className = v;
+      else if (k === 'html') n.innerHTML = v;
+      else if (k.startsWith('on')) n.addEventListener(k.slice(2), v);
+      else if (v === false || v == null) continue;
+      else n.setAttribute(k, v === true ? '' : v);
+    }
+    for (const k of kids) if (k != null) n.append(k);
+    return n;
+  };
+
+  /* ---------- Persistance (localStorage, best-effort) ---------- */
+  const CFG = Object.assign({ key: 'classes-de-mots-v1', brand: 'Classes de mots', eyebrow: 'Français · Secondaire 1 · Grammaire, partie 1 (p. 158–182)', title: 'Les classes de mots', lead: 'Un parcours d’environ une heure, tout seul. Lis chaque mini-leçon, réponds aux questions, et lis bien l’explication quand tu te trompes : la question reviendra. Termine par l’examen blanc.', examTitle: 'Examen blanc' }, (typeof APP !== 'undefined' ? APP : {}));
+  const KEY = CFG.key;
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } };
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* ignore */ } };
+
+  const fresh = () => ({
+    screen: 'home',            // home | lesson | quiz | modend | examintro | exam | examend
+    modIdx: 0, lessonIdx: 0,
+    phase: 'main',             // main | review
+    qIdx: 0, mainOrder: [], reviewQueue: [], reviewTries: {},
+    firstTry: {},              // modId -> {correct, total}
+    modules: {},               // modId -> {done:bool, correct, total, seconds}
+    exam: { order: [], idx: 0, answers: [], done: false, best: null, attempts: 0 },
+    elapsed: 0, modStart: 0
+  });
+  let S = Object.assign(fresh(), load() || {});
+  if (!S.exam) S.exam = fresh().exam;
+
+  /* ---------- Chrono (secondes actives) ---------- */
+  setInterval(() => {
+    if (document.visibilityState === 'visible' && S.screen !== 'home') { S.elapsed++; tickTimer(); if (S.elapsed % 10 === 0) save(); }
+  }, 1000);
+  const fmt = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+  const fmtMin = s => s < 60 ? 'moins d’une minute' : `${Math.round(s / 60)} min`;
+  function tickTimer() { const t = $('#timer'); if (t) t.textContent = fmt(S.elapsed); }
+
+  /* ---------- Utilitaires texte ---------- */
+  const normTok = s => s.replace(/~/g, '').toLowerCase().replace(/'/g, '’')
+    .replace(/^[«»"(\[—–]+/, '').replace(/[.,;:!?…»")\]—–]+$/, '');
+  const normAns = s => s.trim().toLowerCase().replace(/’/g, "'").replace(/\s+/g, ' ');
+  const stripAcc = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const tokenize = s => {
+    const out = [];
+    for (const raw of s.split(/\s+/)) {
+      if (!raw) continue;
+      const parts = raw.split('~');
+      parts.forEach((p, i) => out.push({ text: p, glue: i < parts.length - 1, norm: normTok(p), punct: normTok(p) === '' }));
+    }
+    return out;
+  };
+  const shuffle = (arr, seed) => {
+    const a = arr.slice(); let s = seed || 1;
+    const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+    for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+    return a;
+  };
+  const stripHtml = h => { const d = document.createElement('div'); d.innerHTML = h; return d.textContent; };
+
+  /* ---------- Tuteur (capacité « sample », optionnelle) ---------- */
+  let sampleFn = null;
+  try {
+    if (window.claude && typeof window.claude.use === 'function') {
+      window.claude.use('sample').then(fn => { sampleFn = fn; document.body.classList.toggle('has-tutor', !!fn); }).catch(() => {});
+    }
+  } catch (e) { /* pas de tuteur */ }
+
+  /* ---------- Rendu général ---------- */
+  const app = $('#app');
+  const cur = () => MODULES[S.modIdx];
+  const clsColor = k => `var(--c-${k})`;
+
+  function render() {
+    save();
+    app.innerHTML = '';
+    document.body.dataset.screen = S.screen;
+    ({ home, lesson, quiz, modend, examintro, exam, examend })[S.screen]();
+    window.scrollTo({ top: 0 });
+  }
+
+  function header(opts) {
+    const h = el('header', { class: 'top' + (opts.home ? ' home' : ''), style: opts.color ? `--accent:${opts.color}` : '' });
+    const timer = el('span', { id: 'timer', class: 'timer', title: 'Temps actif' }, fmt(S.elapsed));
+    const memo = el('button', { class: 'icon-btn', 'aria-label': 'Aide-mémoire', onclick: openMemo, hidden: !!opts.noMemo }, svgBook());
+    if (opts.home) {
+      h.append(el('span', { class: 'brand' }, CFG.brand), el('span', { class: 'spacer' }));
+      if (S.elapsed) h.append(timer);
+      h.append(memo);
+    } else {
+      const left = el('button', { class: 'icon-btn', 'aria-label': 'Retour à l’accueil', onclick: goHome }, svgBack());
+      const mid = el('div', { class: 'top-mid' }, el('div', { class: 'top-title' }, opts.title || ''), opts.sub ? el('div', { class: 'top-sub' }, opts.sub) : null);
+      h.append(left, mid, timer, memo);
+    }
+    if (opts.progress) {
+      const [n, total] = opts.progress;
+      const bar = el('div', { class: 'prog', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': total, 'aria-valuenow': n });
+      bar.append(el('div', { class: 'prog-fill', style: `width:${total ? (n / total) * 100 : 0}%` }));
+      h.append(bar);
+    }
+    return h;
+  }
+  function bar(...btns) { const f = el('footer', { class: 'bar' }); btns.forEach(b => b && f.append(b)); return f; }
+  const primaryBtn = (label, onclick, attrs = {}) => el('button', Object.assign({ class: 'btn primary', onclick }, attrs), label);
+  const ghostBtn = (label, onclick, attrs = {}) => el('button', Object.assign({ class: 'btn ghost', onclick }, attrs), label);
+
+  function goHome() { S.screen = 'home'; render(); }
+
+  /* ---------- Accueil ---------- */
+  function home() {
+    const doneCount = MODULES.filter(m => S.modules[m.id]?.done).length;
+    const allDone = doneCount === MODULES.length;
+    const started = S.elapsed > 0;
+    const main = el('main', { class: 'main' });
+    main.append(el('section', { class: 'hero' },
+      el('p', { class: 'eyebrow' }, CFG.eyebrow),
+      el('h1', {}, CFG.title),
+      el('p', { class: 'lead' }, CFG.lead),
+      el('div', { class: 'legend' },
+        el('span', { class: 'leg var' }, '5 classes variables'),
+        el('span', { class: 'leg inv' }, '3 classes invariables'))
+    ));
+
+    const list = el('ol', { class: 'modlist' });
+    let nextIdx = MODULES.findIndex(m => !S.modules[m.id]?.done);
+    MODULES.forEach((m, i) => {
+      const st = S.modules[m.id];
+      const li = el('li', { class: 'modrow' + (st?.done ? ' done' : '') + (i === nextIdx ? ' next' : ''), style: `--accent:${clsColor(m.cls)}` });
+      const dot = el('span', { class: 'moddot' }, st?.done ? svgCheck() : String(i));
+      const txt = el('div', { class: 'modtxt' }, el('div', { class: 'modname' }, m.title), el('div', { class: 'modmeta' }, st?.done ? `${st.correct}/${st.total} au premier essai · ${fmtMin(st.seconds || 0)}` : `${m.items.length} questions · ~${m.minutes} min`));
+      const btn = el('button', { class: 'btn small', onclick: () => startModule(i) }, st?.done ? 'Refaire' : (i === nextIdx && started ? 'Continuer' : 'Ouvrir'));
+      li.append(dot, txt, btn);
+      list.append(li);
+    });
+    // Examen
+    const ex = S.exam;
+    const exli = el('li', { class: 'modrow exam' + (ex.best != null ? ' done' : '') + (allDone && ex.best == null ? ' next' : '') });
+    exli.append(el('span', { class: 'moddot' }, ex.best != null ? svgCheck() : '★'),
+      el('div', { class: 'modtxt' }, el('div', { class: 'modname' }, CFG.examTitle), el('div', { class: 'modmeta' }, ex.best != null ? `Meilleur résultat : ${ex.best}/${EXAM.items.length}` : `${EXAM.items.length} questions · ~${EXAM.minutes} min · sans indice`)),
+      el('button', { class: 'btn small', onclick: startExamIntro }, ex.best != null ? 'Refaire' : 'Commencer'));
+    list.append(exli);
+    main.append(list);
+
+    const tot = el('p', { class: 'foot-note' }, started ? `Temps actif jusqu’ici : ${fmtMin(S.elapsed)}. Ta progression est gardée sur cet appareil.` : 'Ta progression est gardée automatiquement sur cet appareil.');
+    main.append(tot);
+    if (started) main.append(el('button', { class: 'link-btn', onclick: resetAll }, 'Tout recommencer à zéro'));
+
+    const mainBtn = allDone ? primaryBtn(ex.best != null ? 'Refaire l’examen blanc' : 'Passer l’examen blanc', startExamIntro)
+      : primaryBtn(started ? `Continuer : ${MODULES[Math.max(0, nextIdx)].title}` : 'Commencer', () => startModule(Math.max(0, nextIdx)));
+    app.append(header({ home: true }), main, bar(mainBtn));
+  }
+  function resetAll() {
+    if (!confirm('Effacer toute ta progression et recommencer à zéro ?')) return;
+    S = fresh(); render();
+  }
+
+  /* ---------- Module : leçon ---------- */
+  function startModule(i) {
+    const m = MODULES[i];
+    // Reprise exacte si on était déjà dans ce module
+    const resuming = S.modIdx === i && !S.modules[m.id]?.done && (S.qIdx > 0 || S.phase === 'review');
+    S.modIdx = i;
+    if (!resuming) {
+      S.lessonIdx = 0; S.phase = 'main'; S.qIdx = 0;
+      S.mainOrder = m.items.map((_, k) => k);
+      S.reviewQueue = []; S.reviewTries = {};
+      S.firstTry[m.id] = { correct: 0, total: 0 };
+      S.modStart = S.elapsed;
+      S.screen = (m.lesson && m.lesson.length) ? 'lesson' : 'quiz';
+    } else {
+      S.screen = 'quiz';
+    }
+    render();
+  }
+
+  function lesson() {
+    const m = cur(); const L = m.lesson; const k = S.lessonIdx; const card = L[k];
+    const main = el('main', { class: 'main lesson', style: `--accent:${clsColor(m.cls)}` });
+    main.append(el('div', { class: 'chip-row' }, classChip(m.cls), el('span', { class: 'lesson-count' }, `Leçon ${k + 1} / ${L.length}`)));
+    main.append(el('h2', { class: 'lesson-h', html: card.h }));
+    main.append(el('div', { class: 'lesson-b', html: card.b }));
+    if (k === 0) main.append(el('p', { class: 'intro-note' }, m.intro));
+    const dots = el('div', { class: 'dots' }); L.forEach((_, j) => dots.append(el('span', { class: 'dot' + (j === k ? ' on' : j < k ? ' seen' : '') })));
+    main.append(dots);
+    const prev = k > 0 ? ghostBtn('Précédent', () => { S.lessonIdx--; render(); }) : ghostBtn('Accueil', goHome);
+    const next = k < L.length - 1 ? primaryBtn('Suivant', () => { S.lessonIdx++; render(); }) : primaryBtn(`Aux questions (${m.items.length})`, () => { S.screen = 'quiz'; render(); });
+    const tutor = el('button', { class: 'btn tutor-btn', onclick: () => openTutor({ lesson: card }) }, 'Une question ?');
+    app.append(header({ back: true, title: m.title, sub: 'Leçon', color: clsColor(m.cls), progress: [k + 1, L.length] }), main, bar(prev, tutor, next));
+  }
+
+  /* ---------- Module : questions ---------- */
+  let ui = { selected: null, answered: false, correct: false, tapSel: new Set(), typed: '' };
+
+  function currentItemRef() {
+    if (S.phase === 'main') return S.qIdx < S.mainOrder.length ? S.mainOrder[S.qIdx] : null;
+    return S.qIdx < S.reviewQueue.length ? S.reviewQueue[S.qIdx] : null;
+  }
+
+  function quiz() {
+    const m = cur();
+    const ref = currentItemRef();
+    if (ref == null) { return advancePhase(); }
+    const item = m.items[ref];
+    ui = { selected: null, answered: false, correct: false, tapSel: new Set(), typed: '' };
+    const total = S.phase === 'main' ? S.mainOrder.length : S.reviewQueue.length;
+    const main = el('main', { class: 'main quiz', style: `--accent:${clsColor(m.cls)}` });
+    main.append(el('div', { class: 'chip-row' }, classChip(m.cls), el('span', { class: 'qcount' }, S.phase === 'review' ? `Retour sur tes erreurs · ${S.qIdx + 1} / ${total}` : `Question ${S.qIdx + 1} / ${total}`)));
+    main.append(renderItem(item, m));
+    const fb = el('div', { id: 'feedback', class: 'feedback', hidden: true }); main.append(fb);
+    const check = primaryBtn('Vérifier', () => checkAnswer(item, m), { id: 'checkBtn', disabled: true });
+    const hint = ghostBtn('Indice', () => showHint(item, m), { id: 'hintBtn' });
+    app.append(header({ back: true, title: m.title, sub: S.phase === 'review' ? 'Révision des erreurs' : 'Questions', color: clsColor(m.cls), progress: [S.qIdx, total] }), main, bar(hint, check));
+    if (item.t === 'type') setTimeout(() => $('#typeInput')?.focus(), 50);
+  }
+
+  function renderItem(item, m, examMode) {
+    const wrap = el('div', { class: 'item' });
+    wrap.append(el('p', { class: 'q', html: item.q }));
+    if (item.t === 'mc') {
+      const list = el('div', { class: 'opts', role: 'radiogroup' });
+      item.opts.forEach((o, i) => {
+        const b = el('button', { class: 'opt', role: 'radio', 'aria-checked': 'false', html: `<span class="opt-l">${String.fromCharCode(65 + i)}</span><span class="opt-t">${o}</span>`, onclick: () => {
+          if (ui.answered) return;
+          ui.selected = i;
+          list.querySelectorAll('.opt').forEach((x, j) => { x.classList.toggle('sel', j === i); x.setAttribute('aria-checked', j === i); });
+          enableCheck();
+        } });
+        list.append(b);
+      });
+      wrap.append(list);
+    } else if (item.t === 'tap') {
+      const sent = el('p', { class: 'sentence' });
+      tokenize(item.s).forEach((tk, i) => {
+        if (tk.punct) { sent.append(el('span', { class: 'punct' }, tk.text)); }
+        else {
+          const b = el('button', { class: 'tok', 'data-i': i, 'data-n': tk.norm, 'aria-pressed': 'false', onclick: () => {
+            if (ui.answered) return;
+            if (ui.tapSel.has(i)) ui.tapSel.delete(i); else ui.tapSel.add(i);
+            b.classList.toggle('sel', ui.tapSel.has(i)); b.setAttribute('aria-pressed', ui.tapSel.has(i));
+            enableCheck(ui.tapSel.size > 0);
+          } }, tk.text);
+          sent.append(b);
+        }
+        if (!tk.glue) sent.append(' ');
+      });
+      wrap.append(sent);
+      wrap.append(el('p', { class: 'help' }, 'Tape sur un mot pour le sélectionner ; tape de nouveau pour l’enlever.'));
+    } else if (item.t === 'type') {
+      const inp = el('input', { id: 'typeInput', class: 'type-in', type: 'text', lang: 'fr', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false', placeholder: item.placeholder || 'Ta réponse', 'aria-label': 'Ta réponse' });
+      inp.addEventListener('input', () => { ui.typed = inp.value; enableCheck(inp.value.trim().length > 0); });
+      inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !$('#checkBtn').disabled) $('#checkBtn').click(); });
+      wrap.append(inp);
+    }
+    return wrap;
+  }
+  function enableCheck(on = true) { const b = $('#checkBtn'); if (b) b.disabled = !on; }
+
+  function showHint(item, m) {
+    const fb = $('#feedback');
+    fb.hidden = false; fb.className = 'feedback hint';
+    fb.innerHTML = `<p class="fb-title">Indice</p><p>${item.hint || m.defaultHint}</p>`;
+    $('#hintBtn').disabled = true;
+  }
+
+  function evaluate(item) {
+    if (item.t === 'mc') return { ok: ui.selected === item.a, given: ui.selected };
+    if (item.t === 'tap') {
+      const toks = tokenize(item.s);
+      const targets = new Set(item.a.map(x => normTok(x)));
+      const targetIdx = new Set(toks.map((t, i) => targets.has(t.norm) && !t.punct ? i : -1).filter(i => i >= 0));
+      const sel = ui.tapSel;
+      const ok = sel.size === targetIdx.size && [...sel].every(i => targetIdx.has(i));
+      return { ok, targetIdx, given: [...sel].map(i => toks[i].text) };
+    }
+    if (item.t === 'type') {
+      const g = normAns(ui.typed);
+      const acc = item.a.map(normAns);
+      if (acc.includes(g)) return { ok: true, given: ui.typed };
+      if (acc.map(stripAcc).includes(stripAcc(g))) return { ok: true, accentNote: true, given: ui.typed };
+      return { ok: false, given: ui.typed };
+    }
+  }
+
+  function checkAnswer(item, m) {
+    if (ui.answered) return;
+    const r = evaluate(item);
+    ui.answered = true; ui.correct = r.ok;
+    paintResult(item, r);
+    // Statistiques
+    const first = S.phase === 'main';
+    if (first) { S.firstTry[m.id].total++; if (r.ok) S.firstTry[m.id].correct++; if (!r.ok) S.reviewQueue.push(S.mainOrder[S.qIdx]); }
+    else { const ref = S.reviewQueue[S.qIdx]; S.reviewTries[ref] = (S.reviewTries[ref] || 0) + 1; if (!r.ok && S.reviewTries[ref] < 2) S.reviewQueue.push(ref); }
+    save();
+    const fb = $('#feedback'); fb.hidden = false; fb.className = 'feedback ' + (r.ok ? 'ok' : 'bad');
+    const title = r.ok ? (r.accentNote ? 'Bonne réponse — attention à l’accent !' : pick(['Bravo !', 'Exact !', 'Bien joué !', 'Oui !', 'Parfait !'])) : 'Pas tout à fait.';
+    let ansLine = '';
+    if (!r.ok || r.accentNote) ansLine = `<p class="fb-ans">Bonne réponse : <b>${correctText(item)}</b></p>`;
+    fb.innerHTML = `<p class="fb-title">${title}</p>${ansLine}<p class="fb-why">${item.why}</p>`;
+    if (!r.ok && S.phase === 'main') fb.append(el('p', { class: 'fb-note' }, 'Cette question reviendra à la fin du module.'));
+    fb.append(el('button', { class: 'btn tutor-btn inline', onclick: () => openTutor({ item, given: r.given, ok: r.ok }) }, r.ok ? 'Demande à Claude' : 'Je ne comprends pas'));
+    // Barre
+    const f = $('.bar'); f.innerHTML = '';
+    f.append(primaryBtn('Suivant', nextQuestion, { id: 'nextBtn' }));
+    setTimeout(() => fb.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+  }
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+
+  function correctText(item) {
+    if (item.t === 'mc') return item.opts[item.a];
+    if (item.t === 'tap') return item.a.map(x => x.replace(/~/g, '')).join(', ');
+    return item.a[0];
+  }
+
+  function paintResult(item, r) {
+    if (item.t === 'mc') {
+      document.querySelectorAll('.opt').forEach((x, j) => {
+        x.disabled = true;
+        if (j === item.a) x.classList.add('right');
+        else if (j === ui.selected) x.classList.add('wrong');
+      });
+    } else if (item.t === 'tap') {
+      document.querySelectorAll('.tok').forEach(b => {
+        const i = +b.dataset.i; b.disabled = true;
+        const isT = r.targetIdx.has(i), isS = ui.tapSel.has(i);
+        if (isT && isS) b.classList.add('right');
+        else if (isS) b.classList.add('wrong');
+        else if (isT) b.classList.add('missed');
+      });
+    } else if (item.t === 'type') {
+      const inp = $('#typeInput'); inp.disabled = true; inp.classList.add(r.ok ? 'right' : 'wrong');
+    }
+  }
+
+  function nextQuestion() {
+    S.qIdx++;
+    render();
+  }
+
+  function advancePhase() {
+    const m = cur();
+    if (S.phase === 'main' && S.reviewQueue.length) { S.phase = 'review'; S.qIdx = 0; S.screen = 'quiz'; return render(); }
+    // Fin du module
+    const ft = S.firstTry[m.id] || { correct: 0, total: m.items.length };
+    S.modules[m.id] = { done: true, correct: ft.correct, total: ft.total, seconds: Math.max(0, S.elapsed - (S.modStart || 0)) };
+    S.phase = 'main'; S.qIdx = 0; S.reviewQueue = [];
+    S.screen = 'modend'; render();
+  }
+
+  function modend() {
+    const m = cur(); const st = S.modules[m.id];
+    const pct = st.total ? st.correct / st.total : 0;
+    const stars = pct >= 0.9 ? 3 : pct >= 0.7 ? 2 : 1;
+    const main = el('main', { class: 'main end', style: `--accent:${clsColor(m.cls)}` });
+    main.append(classChip(m.cls));
+    main.append(el('h2', {}, 'Module terminé'));
+    main.append(el('div', { class: 'stars', 'aria-label': `${stars} étoiles sur 3` }, ...[1, 2, 3].map(i => el('span', { class: 'star' + (i <= stars ? ' on' : '') }, '★'))));
+    main.append(el('p', { class: 'score' }, el('b', {}, `${st.correct} / ${st.total}`), ' au premier essai'));
+    const msg = pct >= 0.9 ? 'Excellent. Tu maîtrises cette classe de mots.' : pct >= 0.7 ? 'Bien. Relis l’explication des questions ratées : elles reviendront dans l’examen blanc.' : 'C’est la classe à retravailler. Reprends la leçon une fois avant l’examen blanc, ou refais le module maintenant.';
+    main.append(el('p', { class: 'lead' }, msg));
+    main.append(el('p', { class: 'foot-note' }, `Temps pour ce module : ${fmtMin(st.seconds)}. Temps total : ${fmtMin(S.elapsed)}.`));
+    const nextIdx = MODULES.findIndex((x, i) => i > S.modIdx && !S.modules[x.id]?.done);
+    const anyLeft = MODULES.findIndex(x => !S.modules[x.id]?.done);
+    let next;
+    if (nextIdx >= 0) next = primaryBtn(`Module suivant : ${MODULES[nextIdx].title}`, () => startModule(nextIdx));
+    else if (anyLeft >= 0) next = primaryBtn(`Continuer : ${MODULES[anyLeft].title}`, () => startModule(anyLeft));
+    else next = primaryBtn('Passer l’examen blanc', startExamIntro);
+    const redo = ghostBtn('Refaire', () => { delete S.modules[m.id]; S.qIdx = 0; S.phase = 'main'; startModule(S.modIdx); });
+    app.append(header({ back: true, title: m.title, sub: 'Bilan', color: clsColor(m.cls) }), main, bar(redo, next));
+  }
+
+  /* ---------- Examen blanc ---------- */
+  function startExamIntro() { S.screen = 'examintro'; render(); }
+  function examintro() {
+    const main = el('main', { class: 'main end' });
+    main.append(el('p', { class: 'eyebrow' }, 'Comme au vrai examen'));
+    main.append(el('h2', {}, CFG.examTitle));
+    main.append(el('p', { class: 'lead' }, `${EXAM.items.length} questions mélangées sur les 8 classes de mots et les manipulations. Pas d’indice, pas de leçon, et les réponses ne sont montrées qu’à la fin. Prends ton temps : environ ${EXAM.minutes} minutes.`));
+    const notDone = MODULES.filter(m => !S.modules[m.id]?.done);
+    if (notDone.length) main.append(el('p', { class: 'warn-box' }, `Tu n’as pas encore terminé : ${notDone.map(m => m.title).join(', ')}. Tu peux quand même essayer l’examen, mais il sera plus facile après.`));
+    if (S.exam.best != null) main.append(el('p', { class: 'foot-note' }, `Meilleur résultat jusqu’ici : ${S.exam.best} / ${EXAM.items.length}.`));
+    const resume = !S.exam.done && S.exam.order.length && S.exam.idx > 0 && S.exam.idx < S.exam.order.length;
+    const go = primaryBtn(resume ? `Reprendre (question ${S.exam.idx + 1})` : 'Commencer l’examen', () => {
+      if (!resume) { S.exam.attempts++; S.exam.order = shuffle(EXAM.items.map((_, i) => i), 7 + S.exam.attempts * 13); S.exam.idx = 0; S.exam.answers = []; S.exam.done = false; }
+      S.screen = 'exam'; render();
+    });
+    app.append(header({ back: true, title: CFG.examTitle, sub: '' }), main, bar(ghostBtn('Accueil', goHome), go));
+  }
+
+  function exam() {
+    const E = S.exam;
+    if (E.idx >= E.order.length) { return finishExam(); }
+    const item = EXAM.items[E.order[E.idx]];
+    ui = { selected: null, answered: false, correct: false, tapSel: new Set(), typed: '' };
+    const main = el('main', { class: 'main quiz exam-mode' });
+    main.append(el('div', { class: 'chip-row' }, el('span', { class: 'chip exam-chip' }, 'Examen'), el('span', { class: 'qcount' }, `Question ${E.idx + 1} / ${E.order.length}`)));
+    main.append(renderItem(item, null, true));
+    const check = primaryBtn('Réponse suivante', () => {
+      const r = evaluate(item);
+      E.answers.push({ ref: E.order[E.idx], ok: r.ok, given: item.t === 'mc' ? item.opts[ui.selected] : item.t === 'tap' ? r.given.join(', ') : ui.typed });
+      E.idx++; render();
+    }, { id: 'checkBtn', disabled: true });
+    app.append(header({ back: true, title: CFG.examTitle, sub: 'Aucune aide', progress: [E.idx, E.order.length], noMemo: true }), main, bar(check));
+    if (item.t === 'type') setTimeout(() => $('#typeInput')?.focus(), 50);
+  }
+
+  function finishExam() {
+    const E = S.exam; E.done = true;
+    const score = E.answers.filter(a => a.ok).length;
+    if (E.best == null || score > E.best) E.best = score;
+    S.screen = 'examend'; render();
+  }
+
+  function examend() {
+    const E = S.exam; const N = E.answers.length; const score = E.answers.filter(a => a.ok).length;
+    const pct = N ? score / N : 0;
+    const main = el('main', { class: 'main end' });
+    main.append(el('p', { class: 'eyebrow' }, 'Résultat : ' + CFG.examTitle));
+    main.append(el('h2', {}, `${score} / ${N}`));
+    const verdict = pct >= 0.85 ? 'Tu es prêt. Continue comme ça : relis simplement l’aide-mémoire la veille de l’examen.' : pct >= 0.7 ? 'Presque ! Retourne dans les modules indiqués ci-dessous, puis refais l’examen blanc.' : 'Encore un tour. Refais les modules indiqués ci-dessous (leçon + questions), puis reviens passer l’examen.';
+    main.append(el('p', { class: 'lead' }, verdict));
+
+    // Bilan par classe
+    const byTag = {};
+    E.answers.forEach(a => { const it = EXAM.items[a.ref]; (byTag[it.tag] ||= { ok: 0, n: 0 }); byTag[it.tag].n++; if (a.ok) byTag[it.tag].ok++; });
+    const sec = el('section', { class: 'bytag' }, el('h3', {}, 'Par classe de mots'));
+    const weak = [];
+    [...CLASS_ORDER, 'manip'].forEach(k => {
+      const t = byTag[k]; if (!t) return;
+      const p = t.ok / t.n;
+      if (p < 0.75) weak.push(k);
+      const row = el('div', { class: 'tagrow', style: `--accent:${clsColor(k)}` },
+        el('span', { class: 'tagname' }, CLASSES[k].label),
+        el('span', { class: 'tagbar' }, el('span', { class: 'tagfill', style: `width:${p * 100}%` })),
+        el('span', { class: 'tagnum' }, `${t.ok}/${t.n}`));
+      sec.append(row);
+    });
+    main.append(sec);
+    if (weak.length) {
+      const links = el('div', { class: 'weak' }, el('h3', {}, 'À retravailler'));
+      weak.forEach(k => { const mi = MODULES.findIndex(m => m.cls === k); if (mi >= 0) links.append(el('button', { class: 'btn small', style: `--accent:${clsColor(k)}`, onclick: () => { delete S.modules[MODULES[mi].id]; S.qIdx = 0; S.phase = 'main'; startModule(mi); } }, `Refaire : ${MODULES[mi].title}`)); });
+      main.append(links);
+    }
+    // Revue des erreurs
+    const wrong = E.answers.filter(a => !a.ok);
+    const rev = el('section', { class: 'review' }, el('h3', {}, wrong.length ? `Tes erreurs (${wrong.length})` : 'Aucune erreur. Impressionnant.'));
+    wrong.forEach(a => {
+      const it = EXAM.items[a.ref];
+      const d = el('details', { class: 'err', style: `--accent:${clsColor(it.tag)}` });
+      const label = it.t === 'tap' ? `${stripHtml(it.q)} « ${it.s.replace(/~/g, '')} »` : stripHtml(it.q).replace(/^Classe du (mot|groupe) en gras :/, '').trim();
+      d.append(el('summary', { html: `<span class="err-tag">${CLASSES[it.tag].label}</span> ${label}` }));
+      d.append(el('p', { class: 'fb-ans' }, `Ta réponse : ${a.given || '—'}`));
+      d.append(el('p', { class: 'fb-ans', html: `Bonne réponse : <b>${correctText(it)}</b>` }));
+      d.append(el('p', { class: 'fb-why', html: it.why }));
+      d.append(el('button', { class: 'btn tutor-btn inline', onclick: () => openTutor({ item: it, given: a.given, ok: false }) }, 'Je ne comprends pas'));
+      rev.append(d);
+    });
+    main.append(rev);
+    main.append(el('p', { class: 'foot-note' }, `Temps actif total : ${fmtMin(S.elapsed)}.`));
+    app.append(header({ back: true, title: CFG.examTitle, sub: 'Résultat' }), main, bar(ghostBtn('Accueil', goHome), primaryBtn('Refaire l’examen', () => { S.exam.done = true; S.exam.idx = 0; S.exam.order = []; startExamIntro(); })));
+  }
+
+  /* ---------- Aide-mémoire ---------- */
+  const MEMO = [
+    ['nom', 'Variable · donneur d’accord', 'Désigne une personne, un animal, un objet, un lieu, un sentiment. Noyau du GN.', 'Remplace par un autre nom (navire → bateau) ; ajoute un adjectif (la grande porte).', 'le lapin, une idée, Montréal, la joie'],
+    ['det', 'Variable · receveur d’accord', 'Introduit un nom ; toujours à gauche d’un nom. Défini, indéfini, possessif, démonstratif, numéral.', 'Remplace par un autre déterminant (beaucoup de → des). Devant un NOM = dét., devant un VERBE = pronom.', 'le, une, plusieurs, cette, mon, trois, beaucoup de'],
+    ['adj', 'Variable · receveur d’accord', 'Qualité, caractéristique ou classement. Noyau du GAdj. Qualifiant (très + adj ✓) ou classifiant.', 'Remplace par un autre adjectif (touchant → drôle). Adjectif ou participe présent ? ne… pas possible = verbe.', 'moite, bon, solaire, québécoise, accomplie'],
+    ['pro', 'Variable · donneur d’accord', 'Remplace un groupe (reprise, avec antécédent) ou désigne qui parle (communication).', 'Remplace par l’antécédent (Elle → Prune). À gauche/droite d’un VERBE = pronom.', 'il, elle, les, lui, en, y, qui, celui-ci, le mien'],
+    ['verbe', 'Variable · se conjugue', 'Action, état, émotion, situés dans le temps. Noyau du GV. Temps simple ou composé (aux. + p. p.).', 'Encadre par ne… pas (l’auxiliaire seulement si composé) ; change le temps (cours → courais).', 'aimer, tu cours, nous avons aimé, elle est arrivée'],
+    ['adv', 'INVARIABLE · effaçable', 'Modifie un verbe, un adjectif ou un adverbe. Négation, temps, lieu, manière, intensité…', 'Efface-le ; remplace par un autre adverbe (couramment → vraiment). Jamais précédé d’un déterminant.', 'très, bien, mal, ici, souvent, rapidement, ne… pas, là-bas'],
+    ['prep', 'INVARIABLE · jamais seule', 'Introduit un complément à sa droite. Noyau du GPrép. Sens : lieu, temps, cause, but, moyen…', 'Remplace par une autre préposition (à cause de → avant). « de » : mets au singulier, remplace par un/le.', 'à, de, dans, pour, sans, vers, grâce à, au lieu de'],
+    ['conj', 'INVARIABLE · jamais déplaçable', 'Coordination : relie des éléments de même fonction. Subordination : introduit une phrase dans une autre.', 'Remplace par une autre conjonction (aussitôt que → quand). On ne peut pas la déplacer (contrairement à l’adverbe).', 'et, ou, mais, car, quand, lorsque, parce que, tandis que']
+  ];
+  function openMemo() {
+    const sheet = $('#sheet'); sheet.innerHTML = '';
+    const box = el('div', { class: 'sheet-box', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Aide-mémoire' });
+    box.append(el('div', { class: 'sheet-head' }, el('h2', {}, 'Aide-mémoire'), el('button', { class: 'icon-btn', 'aria-label': 'Fermer', onclick: closeSheet }, svgClose())));
+    const body = el('div', { class: 'sheet-body' });
+    body.append(el('p', { class: 'memo-intro' }, 'Le test principal : par quel mot connu puis-je le remplacer ? Le mot de remplacement a la même classe.'));
+    MEMO.forEach(([k, kind, what, how, ex]) => {
+      body.append(el('div', { class: 'memo', style: `--accent:${clsColor(k)}` },
+        el('div', { class: 'memo-h' }, classChip(k), el('span', { class: 'memo-kind' }, kind)),
+        el('p', {}, what), el('p', { html: `<b>Pour le reconnaître :</b> ${how}` }), el('p', { class: 'memo-ex' }, ex)));
+    });
+    body.append(el('div', { class: 'memo manip', style: `--accent:${clsColor('manip')}` },
+      el('div', { class: 'memo-h' }, classChip('manip'), el('span', { class: 'memo-kind' }, '5 outils')),
+      el('p', { html: '<b>Ajout</b> (+ un adjectif → nom) · <b>Déplacement</b> (→ complément de phrase) · <b>Effacement</b> (→ facultatif ; l’adverbe s’efface) · <b>Encadrement</b> (c’est… qui → sujet ; ne… pas → verbe) · <b>Remplacement</b> (→ classe du mot)' })));
+    box.append(body);
+    sheet.append(box); sheet.hidden = false; document.body.classList.add('sheet-open');
+  }
+  function closeSheet() { $('#sheet').hidden = true; $('#sheet').innerHTML = ''; document.body.classList.remove('sheet-open'); tutorCtl?.abort(); }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#sheet').hidden) closeSheet(); });
+
+  /* ---------- Tuteur ---------- */
+  let tutorCtl = null;
+  function tutorContext(ctx) {
+    const lines = ['Tu es un tuteur de français patient pour un élève de secondaire 1 au Québec (12-13 ans). Il révise la partie « Les classes de mots » de son cahier de grammaire : nom, déterminant, adjectif, pronom, verbe (classes variables) ; adverbe, préposition, conjonction (classes invariables) ; et les manipulations syntaxiques (ajout, déplacement, effacement, encadrement, remplacement).',
+      'Règles : réponds en français simple, tutoie-le, 3 à 6 phrases maximum, sans liste à puces ni titres. Donne toujours un nouvel exemple concret et montre le test à faire (remplacement, encadrement par ne… pas, effacement, etc.). Utilise le vocabulaire de son manuel : donneur/receveur d’accord, groupe nominal (GN), antécédent, classe variable/invariable, déterminant composé, etc. Ne parle que de cette question ; n’invente pas d’autres exercices.'];
+    if (ctx.lesson) lines.push(`Leçon qu’il lit en ce moment : « ${stripHtml(ctx.lesson.h)} » — ${stripHtml(ctx.lesson.b).slice(0, 1500)}`);
+    if (ctx.item) {
+      lines.push(`Question de l’exercice : ${stripHtml(ctx.item.q)}${ctx.item.s ? ' Phrase : « ' + ctx.item.s.replace(/~/g, '') + ' »' : ''}`);
+      if (ctx.item.opts) lines.push(`Choix offerts : ${ctx.item.opts.map(stripHtml).join(' / ')}`);
+      lines.push(`Réponse de l’élève : ${Array.isArray(ctx.given) ? ctx.given.join(', ') : (ctx.given != null && ctx.given !== '' ? (typeof ctx.given === 'number' ? stripHtml(ctx.item.opts[ctx.given]) : stripHtml(String(ctx.given))) : '(aucune)')} — ${ctx.ok ? 'c’était correct' : 'c’était incorrect'}.`);
+      lines.push(`Bonne réponse : ${stripHtml(correctText(ctx.item))}. Explication du manuel : ${stripHtml(ctx.item.why)}`);
+    }
+    return lines.join('\n');
+  }
+  function openTutor(ctx) {
+    if (!sampleFn) return;
+    const sheet = $('#sheet'); sheet.innerHTML = '';
+    const box = el('div', { class: 'sheet-box tutor', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Demande à Claude' });
+    box.append(el('div', { class: 'sheet-head' }, el('h2', {}, 'Demande à Claude'), el('button', { class: 'icon-btn', 'aria-label': 'Fermer', onclick: closeSheet }, svgClose())));
+    const body = el('div', { class: 'sheet-body' });
+    const out = el('div', { class: 'tutor-out' }, el('p', { class: 'muted' }, ctx.item ? 'Choisis une question rapide ou écris la tienne.' : 'Pose ta question sur cette leçon.'));
+    const quick = el('div', { class: 'quick' });
+    const qs = ctx.item ? ['Explique-moi autrement', 'Donne-moi un autre exemple', 'Quel test je devais faire ?'] : ['Explique-moi plus simplement', 'Donne-moi un exemple', 'Pourquoi c’est important ?'];
+    const turns = [];
+    const ask = async (msg) => {
+      tutorCtl?.abort(); tutorCtl = new AbortController();
+      turns.push({ role: 'user', content: msg });
+      const bubble = el('div', { class: 'bubble ai' }, 'Claude réfléchit…');
+      out.append(el('div', { class: 'bubble me' }, msg), bubble); bubble.scrollIntoView({ block: 'nearest' });
+      try {
+        const { text } = await sampleFn([{ role: 'user', content: tutorContext(ctx) }, ...turns], { modelTier: 'quick', cache: false, signal: tutorCtl.signal, onText: ({ text }) => { bubble.textContent = text; } });
+        turns.push({ role: 'assistant', content: text });
+      } catch (e) {
+        if (e && e.code === 'cancelled') { bubble.remove(); return; }
+        if (e && (e.code === 'not_granted' || e.code === 'sampling_disabled' || e.code === 'not_declared' || e.code === 'capability_disabled')) { sampleFn = null; document.body.classList.remove('has-tutor'); bubble.textContent = 'Le tuteur n’est pas disponible ici. Relis l’explication ci-dessus : elle contient le test à faire.'; return; }
+        bubble.textContent = (e && e.text) ? e.text : (e && e.code === 'rate_limited' ? 'Claude est occupé pour l’instant. Réessaie dans une minute.' : 'Ça n’a pas fonctionné. Réessaie.');
+      }
+    };
+    qs.forEach(q => quick.append(el('button', { class: 'btn small', onclick: () => ask(q) }, q)));
+    const form = el('form', { class: 'tutor-form', onsubmit: e => { e.preventDefault(); const v = inp.value.trim(); if (!v) return; inp.value = ''; ask(v); } });
+    const inp = el('input', { id: 'tutorInput', class: 'type-in', type: 'text', lang: 'fr', placeholder: 'Écris ta question…', 'aria-label': 'Ta question', autocomplete: 'off' });
+    form.append(inp, el('button', { class: 'btn primary', type: 'submit' }, 'Envoyer'));
+    body.append(out, quick, form);
+    body.append(el('p', { class: 'muted small' }, 'Claude ne voit que cette question et la leçon ; il ne connaît pas les autres réponses.'));
+    box.append(body);
+    sheet.append(box); sheet.hidden = false; document.body.classList.add('sheet-open');
+  }
+
+  /* ---------- Petits composants ---------- */
+  function classChip(k) { return el('span', { class: 'chip', style: `--accent:${clsColor(k)}` }, CLASSES[k].label); }
+  function svgBack() { return el('span', { class: 'svg', html: '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>' }); }
+  function svgBook() { return el('span', { class: 'svg', html: '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 19a2.5 2.5 0 0 1 2.5-2.5H20" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 8h7M9 11.5h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>' }); }
+  function svgClose() { return el('span', { class: 'svg', html: '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>' }); }
+  function svgCheck() { return el('span', { class: 'svg', html: '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>' }); }
+
+  /* ---------- Démarrage ---------- */
+  // Si on recharge au milieu d’une leçon/question, on reprend là. Une fin de module ou d’examen affichée reste affichée.
+  if (!['home', 'lesson', 'quiz', 'modend', 'examintro', 'exam', 'examend'].includes(S.screen)) S.screen = 'home';
+  if (S.screen === 'exam' && (!S.exam.order.length || S.exam.done)) S.screen = 'examintro';
+  render();
+})();
+</script>
+</body></html>
