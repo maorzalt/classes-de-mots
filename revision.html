@@ -1,0 +1,979 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Révision">
+<title>Révision du matin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root {
+  --bg: #F2F3F8;
+  --surface: #FFFFFF;
+  --surface2: #E8EAF2;
+  --ink: #171A2B;
+  --muted: #5C6279;
+  --line: #D8DBE6;
+  --primary: #2F55D4;
+  --primary-ink: #FFFFFF;
+  --ok: #1F9D6A;  --ok-bg: #E2F5EB;
+  --bad: #D24B47; --bad-bg: #FBE6E5;
+  --warn: #A96C0F; --warn-bg: #FBF0D9;
+  --c-nom: #D64545;
+  --c-det: #DE7A1C;
+  --c-adj: #B08A12;
+  --c-pro: #C93F8F;
+  --c-verbe: #7A3DB8;
+  --c-adv: #1B8E7D;
+  --c-prep: #2A78C2;
+  --c-conj: #3B9A3B;
+  --c-manip: #5C6279;
+  --c-mix: #2F55D4;
+  --accent: var(--primary);
+  --shadow: 0 1px 2px rgba(23,26,43,.06), 0 8px 24px -12px rgba(23,26,43,.18);
+  --r: 14px;
+  --font-body: "Nunito", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-head: "Outfit", "Nunito", -apple-system, "Segoe UI", sans-serif;
+  --tutor: #6B4FD8;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121420; --surface: #1B1E2C; --surface2: #262A3B; --ink: #EEF0F7; --muted: #A3A9BE; --line: #303549;
+    --primary: #7D95FF; --primary-ink: #0F1220;
+    --ok: #4CC58C; --ok-bg: #16332A; --bad: #F48A86; --bad-bg: #3B2022; --warn: #E3B65A; --warn-bg: #3A2F16;
+    --c-nom: #F27070; --c-det: #F2A050; --c-adj: #E2BE3C; --c-pro: #EA74B9; --c-verbe: #B58AEC; --c-adv: #47C4B2; --c-prep: #6DACF2; --c-conj: #6FC86F; --c-manip: #A3A9BE; --c-mix: #7D95FF;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
+    --tutor: #A08BFF;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121420; --surface: #1B1E2C; --surface2: #262A3B; --ink: #EEF0F7; --muted: #A3A9BE; --line: #303549;
+  --primary: #7D95FF; --primary-ink: #0F1220;
+  --ok: #4CC58C; --ok-bg: #16332A; --bad: #F48A86; --bad-bg: #3B2022; --warn: #E3B65A; --warn-bg: #3A2F16;
+  --c-nom: #F27070; --c-det: #F2A050; --c-adj: #E2BE3C; --c-pro: #EA74B9; --c-verbe: #B58AEC; --c-adv: #47C4B2; --c-prep: #6DACF2; --c-conj: #6FC86F; --c-manip: #A3A9BE; --c-mix: #7D95FF;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
+  --tutor: #A08BFF;
+}
+
+html, body { height: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 17px; line-height: 1.5;
+  -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent;
+}
+* { box-sizing: border-box; }
+b, strong { font-weight: 800; }
+button { font: inherit; color: inherit; }
+.svg { display: inline-flex; line-height: 0; }
+[hidden] { display: none !important; }
+
+/* ---------- Coquille ---------- */
+.app { min-height: 100%; display: flex; flex-direction: column; max-width: 600px; margin: 0 auto; }
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 8px;
+  padding: 10px 12px 8px; background: var(--bg); border-bottom: 1px solid var(--line);
+}
+.top.home { grid-template-columns: auto 1fr auto auto; }
+.top .prog { grid-column: 1 / -1; height: 5px; background: var(--surface2); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.top .prog-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width .3s ease; }
+.brand { font-family: var(--font-head); font-weight: 700; font-size: 18px; letter-spacing: .01em; }
+.spacer { flex: 1; }
+.top-mid { min-width: 0; text-align: center; }
+.top-title { font-family: var(--font-head); font-weight: 700; font-size: 16px; line-height: 1.1; color: var(--accent); text-wrap: balance; }
+.top-sub { font-size: 12.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+.timer { font-variant-numeric: tabular-nums; font-size: 14px; color: var(--muted); font-weight: 700; padding: 4px 8px; border-radius: 8px; background: var(--surface2); }
+.icon-btn { width: 40px; height: 40px; border-radius: 12px; border: 0; background: transparent; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: var(--ink); }
+.icon-btn:hover { background: var(--surface2); }
+.icon-btn:focus-visible, .btn:focus-visible, .opt:focus-visible, .tok:focus-visible, .type-in:focus-visible, .link-btn:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent); outline-offset: 2px; }
+
+.main { flex: 1; padding-block: 18px 24px; padding-inline: 16px; display: flex; flex-direction: column; gap: 16px; }
+.bar {
+  position: sticky; bottom: 0; z-index: 5; display: flex; gap: 10px; align-items: center;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--bg); border-top: 1px solid var(--line);
+}
+.bar .btn.primary { flex: 1; }
+.bar .btn.ghost { flex: 0 0 auto; }
+
+/* ---------- Boutons ---------- */
+.btn {
+  min-height: 50px; padding: 10px 18px; border-radius: 14px; border: 2px solid transparent; cursor: pointer;
+  font-weight: 800; font-size: 16px; line-height: 1.2; text-align: center; transition: transform .06s ease, background .15s ease;
+}
+.btn:active { transform: scale(.98); }
+.btn.primary { background: var(--accent); color: var(--primary-ink); }
+.btn.primary:disabled { opacity: .45; cursor: not-allowed; }
+.btn.ghost { background: var(--surface); color: var(--ink); border-color: var(--line); }
+.btn.ghost:disabled { opacity: .5; cursor: default; }
+.btn.small { min-height: 40px; padding: 6px 14px; font-size: 14.5px; background: var(--surface); border-color: var(--line); }
+.btn.small:hover { border-color: var(--accent); }
+.link-btn { background: none; border: 0; color: var(--muted); text-decoration: underline; cursor: pointer; font-size: 14.5px; align-self: center; padding: 8px; }
+.tutor-btn { display: none; background: color-mix(in srgb, var(--tutor) 12%, var(--surface)); color: var(--tutor); border-color: color-mix(in srgb, var(--tutor) 35%, transparent); }
+body.has-tutor .tutor-btn { display: inline-flex; align-items: center; justify-content: center; }
+.tutor-btn.inline { margin-top: 10px; min-height: 42px; font-size: 15px; }
+
+/* ---------- Accueil ---------- */
+.hero { display: flex; flex-direction: column; gap: 10px; }
+.eyebrow { margin: 0; font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { margin: 0; font-family: var(--font-head); font-weight: 700; font-size: clamp(30px, 8vw, 40px); line-height: 1.05; text-wrap: balance; letter-spacing: -.01em; }
+h2 { margin: 0; font-family: var(--font-head); font-weight: 700; font-size: 26px; line-height: 1.15; text-wrap: balance; }
+h3 { margin: 0 0 8px; font-family: var(--font-head); font-weight: 700; font-size: 18px; }
+.lead { margin: 0; font-size: 17px; color: var(--ink); max-width: 36em; }
+.legend { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.leg { font-size: 13px; font-weight: 800; padding: 4px 10px; border-radius: 999px; }
+.leg.var { background: color-mix(in srgb, var(--c-nom) 14%, var(--surface)); color: var(--c-nom); }
+.leg.inv { background: color-mix(in srgb, var(--c-prep) 14%, var(--surface)); color: var(--c-prep); }
+
+.modlist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.modrow {
+  display: grid; grid-template-columns: 36px 1fr auto; align-items: center; gap: 12px;
+  padding: 12px 12px 12px 14px; background: var(--surface); border-radius: var(--r); border: 2px solid transparent;
+  border-left: 5px solid var(--accent, var(--line));
+}
+.modrow.next { border-color: var(--accent, var(--primary)); box-shadow: var(--shadow); }
+.modrow.exam { --accent: var(--primary); }
+.moddot { width: 34px; height: 34px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-variant-numeric: tabular-nums; background: color-mix(in srgb, var(--accent, var(--primary)) 14%, var(--surface)); color: var(--accent, var(--primary)); }
+.modrow.done .moddot { background: var(--ok-bg); color: var(--ok); }
+.modtxt { min-width: 0; }
+.modname { font-family: var(--font-head); font-weight: 700; font-size: 17px; line-height: 1.2; }
+.modmeta { font-size: 13.5px; color: var(--muted); }
+.foot-note { margin: 0; font-size: 14px; color: var(--muted); }
+.warn-box { margin: 0; padding: 10px 14px; border-radius: 12px; background: var(--warn-bg); color: var(--warn); font-weight: 700; font-size: 15px; }
+
+/* ---------- Puces de classe ---------- */
+.chip-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.chip { display: inline-flex; align-items: center; padding: 4px 11px; border-radius: 999px; font-size: 13px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; background: color-mix(in srgb, var(--accent) 14%, var(--surface)); color: var(--accent); }
+.exam-chip { --accent: var(--primary); }
+.lesson-count, .qcount { font-size: 14px; color: var(--muted); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* ---------- Leçon ---------- */
+.lesson-h { color: var(--accent); }
+.lesson-h .sym { display: inline-block; margin-left: 6px; padding: 0 8px; border-radius: 8px; background: color-mix(in srgb, var(--accent) 14%, var(--surface)); font-size: .8em; vertical-align: middle; }
+.lesson-b { background: var(--surface); border-radius: var(--r); padding: 16px 18px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 10px; font-size: 17px; }
+.lesson-b p { margin: 0; }
+.lesson-b .ex { padding: 10px 14px; border-left: 4px solid var(--accent); background: color-mix(in srgb, var(--accent) 7%, var(--surface)); border-radius: 0 10px 10px 0; font-size: 16.5px; line-height: 1.55; }
+.lesson-b .warn { padding: 10px 14px; border-radius: 10px; background: var(--warn-bg); color: var(--warn); font-weight: 600; }
+.lesson-b .tbl { display: grid; gap: 6px; }
+.lesson-b .tbl > div { padding: 8px 12px; background: var(--surface2); border-radius: 10px; font-size: 15.5px; line-height: 1.4; }
+.lesson-b .tbl small { color: var(--muted); font-size: 13.5px; }
+.lesson-b u { text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.lesson-b s { color: var(--muted); }
+.intro-note { margin: 0; color: var(--muted); font-size: 15px; font-style: italic; }
+.dots { display: flex; gap: 6px; justify-content: center; margin-top: auto; padding-top: 6px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+.dot.seen { background: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.dot.on { background: var(--accent); width: 22px; border-radius: 4px; }
+
+/* ---------- Questions ---------- */
+.item { display: flex; flex-direction: column; gap: 14px; }
+.q { margin: 0; font-size: 18.5px; line-height: 1.45; font-weight: 600; }
+.q b { color: var(--accent); }
+.opts { display: flex; flex-direction: column; gap: 8px; }
+.opt {
+  display: grid; grid-template-columns: 30px 1fr; align-items: center; gap: 10px; text-align: left;
+  min-height: 52px; padding: 10px 14px 10px 10px; border-radius: 14px; border: 2px solid var(--line); background: var(--surface); cursor: pointer; font-size: 16.5px; line-height: 1.35;
+}
+.opt-l { width: 30px; height: 30px; border-radius: 9px; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; background: var(--surface2); color: var(--muted); }
+.opt.sel { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
+.opt.sel .opt-l { background: var(--accent); color: var(--primary-ink); }
+.opt.right { border-color: var(--ok); background: var(--ok-bg); }
+.opt.right .opt-l { background: var(--ok); color: #fff; }
+.opt.wrong { border-color: var(--bad); background: var(--bad-bg); }
+.opt.wrong .opt-l { background: var(--bad); color: #fff; }
+.opt:disabled { cursor: default; }
+.opt:disabled:not(.right):not(.wrong) { opacity: .6; }
+
+.sentence { margin: 0; padding: 14px 14px; background: var(--surface); border-radius: var(--r); box-shadow: var(--shadow); font-size: 19px; line-height: 2; }
+.tok { display: inline; padding: 3px 5px; margin: 0 -1px; border-radius: 8px; border: 2px solid transparent; background: transparent; cursor: pointer; line-height: 1.4; }
+.tok:hover { background: var(--surface2); }
+.tok.sel { background: color-mix(in srgb, var(--accent) 16%, var(--surface)); border-color: var(--accent); }
+.tok.right { background: var(--ok-bg); border-color: var(--ok); }
+.tok.wrong { background: var(--bad-bg); border-color: var(--bad); text-decoration: line-through; }
+.tok.missed { border-color: var(--warn); border-style: dashed; background: var(--warn-bg); }
+.tok:disabled { cursor: default; }
+.punct { color: var(--muted); }
+.help { margin: 0; font-size: 14px; color: var(--muted); }
+
+.type-in { width: 100%; min-height: 54px; padding: 10px 16px; border-radius: 14px; border: 2px solid var(--line); background: var(--surface); color: var(--ink); font-size: 19px; }
+.type-in:focus { border-color: var(--accent); outline: none; }
+.type-in.right { border-color: var(--ok); background: var(--ok-bg); }
+.type-in.wrong { border-color: var(--bad); background: var(--bad-bg); }
+
+.feedback { border-radius: var(--r); padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; border: 2px solid var(--line); background: var(--surface); }
+.feedback.ok { border-color: var(--ok); background: var(--ok-bg); }
+.feedback.bad { border-color: var(--bad); background: var(--bad-bg); }
+.feedback.hint { border-color: var(--warn); background: var(--warn-bg); }
+.feedback p { margin: 0; }
+.fb-title { font-family: var(--font-head); font-weight: 700; font-size: 19px; }
+.feedback.ok .fb-title { color: var(--ok); }
+.feedback.bad .fb-title { color: var(--bad); }
+.feedback.hint .fb-title { color: var(--warn); }
+.fb-ans { font-size: 16.5px; }
+.fb-why { font-size: 16px; line-height: 1.5; }
+.fb-why u { text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.fb-note { font-size: 14px; color: var(--muted); }
+
+/* ---------- Fins ---------- */
+.end { align-items: flex-start; }
+.end h2 { font-size: 34px; }
+.stars { display: flex; gap: 6px; font-size: 34px; line-height: 1; }
+.star { color: var(--line); }
+.star.on { color: var(--warn); }
+.score { margin: 0; font-size: 20px; }
+.score b { font-family: var(--font-head); font-size: 26px; color: var(--accent); }
+.bytag { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+.tagrow { display: grid; grid-template-columns: 110px 1fr 44px; align-items: center; gap: 10px; font-size: 15px; }
+.tagname { font-weight: 800; color: var(--accent); }
+.tagbar { height: 10px; border-radius: 5px; background: var(--surface2); overflow: hidden; }
+.tagfill { display: block; height: 100%; background: var(--accent); border-radius: 5px; }
+.tagnum { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); font-weight: 700; }
+.weak { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+.weak .btn.small { border-left: 5px solid var(--accent); text-align: left; }
+.review { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+.err { background: var(--surface); border-radius: 12px; padding: 10px 14px; border-left: 5px solid var(--accent); }
+.err summary { cursor: pointer; font-weight: 700; font-size: 15.5px; line-height: 1.4; }
+.err-tag { display: inline-block; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--accent); margin-right: 6px; }
+.err p { margin: 8px 0 0; font-size: 15.5px; }
+
+/* ---------- Feuille (aide-mémoire, tuteur) ---------- */
+#sheet { position: fixed; inset: 0; z-index: 20; background: rgba(10,12,24,.45); display: flex; align-items: flex-end; justify-content: center; }
+.sheet-box { width: 100%; max-width: 600px; max-height: 92%; background: var(--bg); border-radius: 20px 20px 0 0; display: flex; flex-direction: column; box-shadow: 0 -8px 40px rgba(0,0,0,.25); }
+.sheet-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 8px 18px; border-bottom: 1px solid var(--line); }
+.sheet-head h2 { font-size: 22px; }
+.sheet-body { overflow-y: auto; padding: 14px 16px calc(16px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 10px; -webkit-overflow-scrolling: touch; }
+body.sheet-open { overflow: hidden; }
+.memo-intro { margin: 0; font-weight: 700; }
+.memo { background: var(--surface); border-radius: 12px; padding: 12px 14px; border-left: 5px solid var(--accent); display: flex; flex-direction: column; gap: 6px; font-size: 15.5px; }
+.memo p { margin: 0; }
+.memo-h { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.memo-kind { font-size: 12.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.memo-ex { color: var(--muted); font-style: italic; }
+.tutor-out { display: flex; flex-direction: column; gap: 8px; min-height: 60px; }
+.bubble { padding: 10px 14px; border-radius: 14px; font-size: 16px; line-height: 1.5; white-space: pre-wrap; max-width: 92%; }
+.bubble.me { align-self: flex-end; background: color-mix(in srgb, var(--tutor) 16%, var(--surface)); border-bottom-right-radius: 4px; }
+.bubble.ai { align-self: flex-start; background: var(--surface); border-bottom-left-radius: 4px; box-shadow: var(--shadow); }
+.quick { display: flex; gap: 8px; flex-wrap: wrap; }
+.tutor-form { display: flex; gap: 8px; }
+.tutor-form .type-in { flex: 1; font-size: 16px; min-height: 48px; }
+.tutor-form .btn { min-height: 48px; --accent: var(--tutor); }
+.muted { color: var(--muted); margin: 0; }
+.muted.small { font-size: 13px; }
+
+@media (min-width: 640px) {
+  body { font-size: 16px; }
+  .main { padding-inline: 24px; }
+  .top, .bar { padding-inline: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; scroll-behavior: auto !important; }
+}
+</style>
+</head><body>
+<div id="app" class="app" lang="fr"></div>
+<div id="sheet" hidden></div>
+<script>
+/* ===== Révision du matin : 15 questions, 10 minutes max ===== */
+
+const APP = {
+  key: 'classes-de-mots-revision-v1',
+  brand: 'Révision du matin',
+  eyebrow: 'Dernière révision · 10 minutes max',
+  title: 'Révision du matin',
+  lead: 'Quinze questions mélangées sur tout ce que tu as appris : les 8 classes de mots et les manipulations. Réponds vite mais bien, lis l’explication à chaque fois, puis va passer ton examen la tête tranquille.',
+  examTitle: 'Révision',
+  startLabel: 'Commencer les 15 questions',
+  redoLabel: 'Refaire les 15 questions',
+  modEndTitle: 'Révision terminée',
+  endMsgs: [
+    'Excellent. Tu es prêt : jette un dernier coup d’œil à l’aide-mémoire (icône en haut) et va passer ton examen.',
+    'Bien. Relis l’explication des questions ratées, puis regarde l’aide-mémoire (icône en haut) pour ces classes-là.',
+    'Prends deux minutes pour lire l’aide-mémoire (icône en haut), puis refais les 15 questions une fois.'
+  ],
+  reviewTries: 1
+};
+
+const CLASSES = {
+  nom:  { label: 'Nom' }, det: { label: 'Déterminant', variable: true }, adj: { label: 'Adjectif' }, pro: { label: 'Pronom', variable: true }, verbe: { label: 'Verbe' },
+  adv:  { label: 'Adverbe' }, prep: { label: 'Préposition' }, conj: { label: 'Conjonction' },
+  manip:{ label: 'Manipulations' },
+  mix:  { label: 'Révision' }
+};
+const CLASS_ORDER = ['nom','det','adj','pro','verbe','adv','prep','conj'];
+
+const MODULES = [
+{
+  id: 'rev', cls: 'mix', title: '15 questions éclair', minutes: 8,
+  intro: '',
+  defaultHint: 'Le test n° 1 : par quel mot connu peux-tu le remplacer ? Le mot de remplacement a la même classe. Et pour un verbe conjugué : ne… pas.',
+  lesson: [],
+  items: [
+    /* 1 — manipulation */
+    { t:'mc', tag:'manip', q:'« Les élèves écoutent la consigne. » → « Les élèves <b>n’</b>écoutent <b>pas</b> la consigne. »<br>Quelle manipulation a-t-on faite, et quelle classe de mot a-t-elle permis de trouver ?',
+      opts:['L’encadrement → un verbe conjugué', 'L’effacement → un adverbe', 'Le remplacement → un pronom', 'Le déplacement → une préposition'], a:0,
+      why:'<i>ne… pas</i> <b>encadre</b> le verbe conjugué (<i>écoutent</i>). C’est LE test du verbe conjugué : le seul mot qu’on peut encadrer par <i>ne… pas</i>.',
+      hint:'Qu’est-ce que ne… pas fait autour d’un mot ?' },
+
+    /* 2 — nom */
+    { t:'tap', tag:'nom', q:'Tape sur les <b>noms</b> (il y en a 4).',
+      s:'Pendant l’~hiver, Léa patine sur le lac avec ses amis.', a:['hiver','Léa','lac','amis'],
+      why:'Un nom désigne une personne (<i>Léa</i>, <i>amis</i>), un lieu (<i>lac</i>) ou une période (<i>hiver</i>). Test : on peut mettre un déterminant devant (<i>l’hiver, le lac, des amis</i>). <i>Léa</i> est un nom propre : majuscule, et pas de déterminant.',
+      hint:'Personne, animal, chose, lieu, période… et on peut mettre le, la, les, un, des devant.' },
+
+    /* 3 — dét / pronom */
+    { t:'mc', tag:'pro', q:'« Les voisins <b>les</b> ont invités à souper. »<br>Le mot en gras est…',
+      opts:['un déterminant', 'un pronom', 'une préposition'], a:1,
+      why:'Ce <i>les</i> n’est pas suivi d’un nom mais du verbe (<i>ont invités</i>) : il <b>remplace</b> un groupe du nom (par exemple <i>mes parents</i>) → <b>pronom</b>. Le premier <i>Les</i>, devant le nom <i>voisins</i>, est un déterminant.',
+      hint:'Regarde ce qui vient juste après : un nom, ou un verbe ?' },
+
+    /* 4 — adjectif / adverbe */
+    { t:'mc', tag:'adv', q:'« Ces élèves parlent trop <b>fort</b>. »<br><i>fort</i> est…',
+      opts:['un adjectif', 'un adverbe', 'un nom'], a:1,
+      why:'Il modifie le verbe <i>parlent</i> (ils parlent comment ?) et il ne change jamais : <i>elles parlent fort</i>, pas <i>*fortes</i>. Invariable → <b>adverbe</b>. Dans <i>une voix forte</i>, <i>forte</i> serait un adjectif, accordé avec <i>voix</i>.',
+      hint:'Essaie de le mettre au féminin pluriel. Est-ce que ça change ?' },
+
+    /* 5 — préposition */
+    { t:'tap', tag:'prep', q:'Tape sur les <b>prépositions</b> (il y en a 3).',
+      s:'Le chien de Marc dort sous la table depuis midi.', a:['de','sous','depuis'],
+      why:'Chaque préposition introduit un complément à sa droite : <i>de Marc</i>, <i>sous la table</i>, <i>depuis midi</i>. Elle ne vit jamais seule et forme un GPrép avec ce qui la suit.',
+      hint:'Petit mot invariable + un complément juste après (lieu, temps, appartenance…).' },
+
+    /* 6 — pronom : antécédent */
+    { t:'mc', tag:'pro', q:'« Sophie a perdu ses clés. Elle <b>les</b> cherche partout. »<br>Que remplace <i>les</i> ?',
+      opts:['ses clés', 'Sophie', 'partout'], a:0,
+      why:'<i>les</i> = <i>ses clés</i> : c’est un pronom de reprise, et <i>ses clés</i> est son antécédent. (<i>Elle</i> reprend <i>Sophie</i>.)',
+      hint:'Qu’est-ce qu’elle cherche ?' },
+
+    /* 7 — conjonction / préposition */
+    { t:'mc', tag:'conj', q:'« Elle reste à la maison <b>parce qu’</b>elle est malade. »<br><i>parce que</i> est…',
+      opts:['une préposition', 'une conjonction de subordination', 'un adverbe'], a:1,
+      why:'Il introduit une phrase avec un <b>verbe conjugué</b> (<i>elle est malade</i>) à l’intérieur d’une autre : <b>conjonction de subordination</b>. Une préposition (<i>à cause de</i>) serait suivie d’un groupe sans verbe conjugué : <i>à cause de sa maladie</i>.',
+      hint:'Y a-t-il un verbe conjugué juste après ?' },
+
+    /* 8 — verbe conjugué vs infinitif */
+    { t:'tap', tag:'verbe', q:'Tape sur les verbes <b>conjugués</b> (il y en a 2).',
+      s:'Les enfants veulent jouer dehors, mais il pleut.', a:['veulent','pleut'],
+      why:'<i>ne veulent pas</i>, <i>ne pleut pas</i> : l’encadrement fonctionne. <i>jouer</i> est bien un verbe, mais à l’<b>infinitif</b> : <i>ne pas</i> se place devant (<i>ne pas jouer</i>), il n’est pas encadré, donc il n’est pas conjugué.',
+      hint:'Encadre par ne… pas. Ça marche pour lequel ?' },
+
+    /* 9 — déterminant : catégorie */
+    { t:'mc', tag:'det', q:'« <b>Ces</b> trois amis viennent chaque samedi. »<br><i>Ces</i> est un déterminant…',
+      opts:['défini', 'démonstratif', 'possessif'], a:1,
+      why:'<i>Ces</i> montre, désigne (<i>ces amis-là</i>) : <b>démonstratif</b> (<i>ce, cet, cette, ces</i>). <i>trois</i> est un déterminant numéral. Un possessif serait <i>mes, tes, ses, nos…</i>',
+      hint:'Ce, cet, cette, ces… on montre.' },
+
+    /* 10 — adverbe */
+    { t:'tap', tag:'adv', q:'Tape sur les <b>adverbes</b> (il y en a 2).',
+      s:'Il marche lentement, mais il arrive toujours à l’heure.', a:['lentement','toujours'],
+      why:'<i>lentement</i> (manière, en -ment) et <i>toujours</i> (temps) modifient les verbes <i>marche</i> et <i>arrive</i>. On peut les effacer, la phrase tient encore. <i>mais</i> est une conjonction ; <i>à</i> est une préposition.',
+      hint:'Invariable, et on peut l’effacer sans casser la phrase.' },
+
+    /* 11 — leur / leur */
+    { t:'mc', tag:'det', q:'« Je <b>leur</b> prête leur ballon. »<br>Le premier <i>leur</i> (en gras) est…',
+      opts:['un déterminant possessif', 'un pronom personnel', 'un pronom possessif'], a:1,
+      why:'Le premier <i>leur</i> est devant le verbe <i>prête</i> : il remplace <i>à mes amis</i> → <b>pronom</b> personnel (celui-là ne prend jamais de <i>-s</i>). Le deuxième <i>leur</i> introduit le nom <i>ballon</i> → déterminant possessif.',
+      hint:'Nom juste après → déterminant. Verbe juste après → pronom.' },
+
+    /* 12 — adjectif */
+    { t:'tap', tag:'adj', q:'Tape sur les <b>adjectifs</b> (il y en a 3).',
+      s:'La petite fille porte un manteau rouge et des bottes neuves.', a:['petite','rouge','neuves'],
+      why:'Chaque adjectif dit comment est le nom et s’<b>accorde</b> avec lui : <i>petite</i> (fille), <i>rouge</i> (manteau), <i>neuves</i> (bottes). Test : on peut ajouter <i>très</i> devant (<i>très petite</i>) ou le remplacer par un autre adjectif.',
+      hint:'Il décrit un nom et il change avec lui (féminin, pluriel).' },
+
+    /* 13 — conjonctions de coordination */
+    { t:'tap', tag:'conj', q:'Tape sur les <b>conjonctions</b> (il y en a 3).',
+      s:'Tu viens ou tu restes, mais décide-toi vite, car nous partons.', a:['ou','mais','car'],
+      why:'<i>ou</i>, <i>mais</i>, <i>car</i> sont des conjonctions de <b>coordination</b> : elles relient des phrases (ou des groupes de même fonction) et ne se déplacent pas. <i>vite</i> est un adverbe.',
+      hint:'Mais, ou, et, donc, car, ni, or…' },
+
+    /* 14 — variables / invariables */
+    { t:'mc', tag:'manip', q:'Quelle liste contient <b>seulement</b> des classes de mots <b>invariables</b> ?',
+      opts:['adverbe, préposition, conjonction', 'nom, adverbe, pronom', 'adjectif, préposition, verbe'], a:0,
+      why:'Les 3 classes <b>invariables</b> : adverbe, préposition, conjonction. Les 5 classes <b>variables</b> : nom, déterminant, adjectif, pronom, verbe.',
+      hint:'Invariable = ne change jamais de forme.' },
+
+    /* 15 — pronom → antécédent (à écrire) */
+    { t:'type', tag:'pro', q:'« Mes cousins habitent à Québec. <b>Ils</b> viennent nous voir souvent. »<br>Écris le groupe de mots que <i>Ils</i> remplace.',
+      a:['mes cousins', 'cousins', 'les cousins'], placeholder:'…',
+      why:'<i>Ils</i> reprend <i>Mes cousins</i>, son antécédent. Le pronom est un <b>donneur</b> d’accord : il commande le verbe <i>viennent</i> (3<sup>e</sup> personne du pluriel).',
+      hint:'Qui vient nous voir ?' }
+  ]
+}
+];
+
+const EXAM = null;
+</script>
+<script>
+/* ===== Moteur de l’entraînement ===== */
+(function () {
+  'use strict';
+
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const el = (tag, attrs = {}, ...kids) => {
+    const n = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (k === 'class') n.className = v;
+      else if (k === 'html') n.innerHTML = v;
+      else if (k.startsWith('on')) n.addEventListener(k.slice(2), v);
+      else if (v === false || v == null) continue;
+      else n.setAttribute(k, v === true ? '' : v);
+    }
+    for (const k of kids) if (k != null) n.append(k);
+    return n;
+  };
+
+  /* ---------- Persistance (localStorage, best-effort) ---------- */
+  const CFG = Object.assign({ key: 'classes-de-mots-v1', brand: 'Classes de mots', eyebrow: 'Français · Secondaire 1 · Grammaire, partie 1 (p. 158–182)', title: 'Les classes de mots', lead: 'Un parcours d’environ une heure, tout seul. Lis chaque mini-leçon, réponds aux questions, et lis bien l’explication quand tu te trompes : la question reviendra. Termine par l’examen blanc.', examTitle: 'Examen blanc' }, (typeof APP !== 'undefined' ? APP : {}));
+  const KEY = CFG.key;
+  const HAS_EXAM = (typeof EXAM !== 'undefined') && !!EXAM;
+  const REVIEW_TRIES = CFG.reviewTries != null ? CFG.reviewTries : 2;
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } };
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* ignore */ } };
+
+  const fresh = () => ({
+    screen: 'home',            // home | lesson | quiz | modend | examintro | exam | examend
+    modIdx: 0, lessonIdx: 0,
+    phase: 'main',             // main | review
+    qIdx: 0, mainOrder: [], reviewQueue: [], reviewTries: {},
+    firstTry: {},              // modId -> {correct, total}
+    modules: {},               // modId -> {done:bool, correct, total, seconds}
+    exam: { order: [], idx: 0, answers: [], done: false, best: null, attempts: 0 },
+    elapsed: 0, modStart: 0
+  });
+  let S = Object.assign(fresh(), load() || {});
+  if (!S.exam) S.exam = fresh().exam;
+
+  /* ---------- Chrono (secondes actives) ---------- */
+  setInterval(() => {
+    if (document.visibilityState === 'visible' && S.screen !== 'home') { S.elapsed++; tickTimer(); if (S.elapsed % 10 === 0) save(); }
+  }, 1000);
+  const fmt = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+  const fmtMin = s => s < 60 ? 'moins d’une minute' : `${Math.round(s / 60)} min`;
+  function tickTimer() { const t = $('#timer'); if (t) t.textContent = fmt(S.elapsed); }
+
+  /* ---------- Utilitaires texte ---------- */
+  const normTok = s => s.replace(/~/g, '').toLowerCase().replace(/'/g, '’')
+    .replace(/^[«»"(\[—–]+/, '').replace(/[.,;:!?…»")\]—–]+$/, '');
+  const normAns = s => s.trim().toLowerCase().replace(/’/g, "'").replace(/\s+/g, ' ');
+  const stripAcc = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const tokenize = s => {
+    const out = [];
+    for (const raw of s.split(/\s+/)) {
+      if (!raw) continue;
+      const parts = raw.split('~');
+      parts.forEach((p, i) => out.push({ text: p, glue: i < parts.length - 1, norm: normTok(p), punct: normTok(p) === '' }));
+    }
+    return out;
+  };
+  const shuffle = (arr, seed) => {
+    const a = arr.slice(); let s = seed || 1;
+    const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+    for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+    return a;
+  };
+  const stripHtml = h => { const d = document.createElement('div'); d.innerHTML = h; return d.textContent; };
+
+  /* ---------- Tuteur (capacité « sample », optionnelle) ---------- */
+  let sampleFn = null;
+  try {
+    if (window.claude && typeof window.claude.use === 'function') {
+      window.claude.use('sample').then(fn => { sampleFn = fn; document.body.classList.toggle('has-tutor', !!fn); }).catch(() => {});
+    }
+  } catch (e) { /* pas de tuteur */ }
+
+  /* ---------- Rendu général ---------- */
+  const app = $('#app');
+  const cur = () => MODULES[S.modIdx];
+  const clsColor = k => `var(--c-${k})`;
+
+  function render() {
+    save();
+    app.innerHTML = '';
+    document.body.dataset.screen = S.screen;
+    ({ home, lesson, quiz, modend, examintro, exam, examend })[S.screen]();
+    window.scrollTo({ top: 0 });
+  }
+
+  function header(opts) {
+    const h = el('header', { class: 'top' + (opts.home ? ' home' : ''), style: opts.color ? `--accent:${opts.color}` : '' });
+    const timer = el('span', { id: 'timer', class: 'timer', title: 'Temps actif' }, fmt(S.elapsed));
+    const memo = el('button', { class: 'icon-btn', 'aria-label': 'Aide-mémoire', onclick: openMemo, hidden: !!opts.noMemo }, svgBook());
+    if (opts.home) {
+      h.append(el('span', { class: 'brand' }, CFG.brand), el('span', { class: 'spacer' }));
+      if (S.elapsed) h.append(timer);
+      h.append(memo);
+    } else {
+      const left = el('button', { class: 'icon-btn', 'aria-label': 'Retour à l’accueil', onclick: goHome }, svgBack());
+      const mid = el('div', { class: 'top-mid' }, el('div', { class: 'top-title' }, opts.title || ''), opts.sub ? el('div', { class: 'top-sub' }, opts.sub) : null);
+      h.append(left, mid, timer, memo);
+    }
+    if (opts.progress) {
+      const [n, total] = opts.progress;
+      const bar = el('div', { class: 'prog', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': total, 'aria-valuenow': n });
+      bar.append(el('div', { class: 'prog-fill', style: `width:${total ? (n / total) * 100 : 0}%` }));
+      h.append(bar);
+    }
+    return h;
+  }
+  function bar(...btns) { const f = el('footer', { class: 'bar' }); btns.forEach(b => b && f.append(b)); return f; }
+  const primaryBtn = (label, onclick, attrs = {}) => el('button', Object.assign({ class: 'btn primary', onclick }, attrs), label);
+  const ghostBtn = (label, onclick, attrs = {}) => el('button', Object.assign({ class: 'btn ghost', onclick }, attrs), label);
+
+  function goHome() { S.screen = 'home'; render(); }
+
+  /* ---------- Accueil ---------- */
+  function home() {
+    const doneCount = MODULES.filter(m => S.modules[m.id]?.done).length;
+    const allDone = doneCount === MODULES.length;
+    const started = S.elapsed > 0;
+    const main = el('main', { class: 'main' });
+    main.append(el('section', { class: 'hero' },
+      el('p', { class: 'eyebrow' }, CFG.eyebrow),
+      el('h1', {}, CFG.title),
+      el('p', { class: 'lead' }, CFG.lead),
+      CFG.legend === false ? null : el('div', { class: 'legend' },
+        el('span', { class: 'leg var' }, '5 classes variables'),
+        el('span', { class: 'leg inv' }, '3 classes invariables'))
+    ));
+
+    const list = el('ol', { class: 'modlist' });
+    let nextIdx = MODULES.findIndex(m => !S.modules[m.id]?.done);
+    MODULES.forEach((m, i) => {
+      const st = S.modules[m.id];
+      const li = el('li', { class: 'modrow' + (st?.done ? ' done' : '') + (i === nextIdx ? ' next' : ''), style: `--accent:${clsColor(m.cls)}` });
+      const dot = el('span', { class: 'moddot' }, st?.done ? svgCheck() : String(MODULES.length === 1 ? 1 : i));
+      const txt = el('div', { class: 'modtxt' }, el('div', { class: 'modname' }, m.title), el('div', { class: 'modmeta' }, st?.done ? `${st.correct}/${st.total} au premier essai · ${fmtMin(st.seconds || 0)}` : `${m.items.length} questions · ~${m.minutes} min`));
+      const btn = el('button', { class: 'btn small', onclick: () => startModule(i) }, st?.done ? 'Refaire' : (i === nextIdx && started ? 'Continuer' : 'Ouvrir'));
+      li.append(dot, txt, btn);
+      list.append(li);
+    });
+    // Examen
+    const ex = S.exam;
+    if (HAS_EXAM) {
+    const exli = el('li', { class: 'modrow exam' + (ex.best != null ? ' done' : '') + (allDone && ex.best == null ? ' next' : '') });
+    exli.append(el('span', { class: 'moddot' }, ex.best != null ? svgCheck() : '★'),
+      el('div', { class: 'modtxt' }, el('div', { class: 'modname' }, CFG.examTitle), el('div', { class: 'modmeta' }, ex.best != null ? `Meilleur résultat : ${ex.best}/${EXAM.items.length}` : `${EXAM.items.length} questions · ~${EXAM.minutes} min · sans indice`)),
+      el('button', { class: 'btn small', onclick: startExamIntro }, ex.best != null ? 'Refaire' : 'Commencer'));
+    list.append(exli);
+    }
+    main.append(list);
+
+    const tot = el('p', { class: 'foot-note' }, started ? `Temps actif jusqu’ici : ${fmtMin(S.elapsed)}. Ta progression est gardée sur cet appareil.` : 'Ta progression est gardée automatiquement sur cet appareil.');
+    main.append(tot);
+    if (started) main.append(el('button', { class: 'link-btn', onclick: resetAll }, 'Tout recommencer à zéro'));
+
+    const mainBtn = allDone ? (HAS_EXAM ? primaryBtn(ex.best != null ? `Refaire : ${CFG.examTitle}` : `Passer : ${CFG.examTitle}`, startExamIntro)
+        : primaryBtn(CFG.redoLabel || 'Refaire', () => { const m0 = MODULES[MODULES.length - 1]; delete S.modules[m0.id]; S.qIdx = 0; S.phase = 'main'; startModule(MODULES.length - 1); }))
+      : primaryBtn(started ? `Continuer : ${MODULES[Math.max(0, nextIdx)].title}` : (CFG.startLabel || 'Commencer'), () => startModule(Math.max(0, nextIdx)));
+    app.append(header({ home: true }), main, bar(mainBtn));
+  }
+  function resetAll() {
+    if (!confirm('Effacer toute ta progression et recommencer à zéro ?')) return;
+    S = fresh(); render();
+  }
+
+  /* ---------- Module : leçon ---------- */
+  function startModule(i) {
+    const m = MODULES[i];
+    // Reprise exacte si on était déjà dans ce module
+    const resuming = S.modIdx === i && !S.modules[m.id]?.done && (S.qIdx > 0 || S.phase === 'review');
+    S.modIdx = i;
+    if (!resuming) {
+      S.lessonIdx = 0; S.phase = 'main'; S.qIdx = 0;
+      S.mainOrder = m.items.map((_, k) => k);
+      S.reviewQueue = []; S.reviewTries = {};
+      S.firstTry[m.id] = { correct: 0, total: 0 };
+      S.modStart = S.elapsed;
+      S.screen = (m.lesson && m.lesson.length) ? 'lesson' : 'quiz';
+    } else {
+      S.screen = 'quiz';
+    }
+    render();
+  }
+
+  function lesson() {
+    const m = cur(); const L = m.lesson; const k = S.lessonIdx; const card = L[k];
+    const main = el('main', { class: 'main lesson', style: `--accent:${clsColor(m.cls)}` });
+    main.append(el('div', { class: 'chip-row' }, classChip(m.cls), el('span', { class: 'lesson-count' }, `Leçon ${k + 1} / ${L.length}`)));
+    main.append(el('h2', { class: 'lesson-h', html: card.h }));
+    main.append(el('div', { class: 'lesson-b', html: card.b }));
+    if (k === 0) main.append(el('p', { class: 'intro-note' }, m.intro));
+    const dots = el('div', { class: 'dots' }); L.forEach((_, j) => dots.append(el('span', { class: 'dot' + (j === k ? ' on' : j < k ? ' seen' : '') })));
+    main.append(dots);
+    const prev = k > 0 ? ghostBtn('Précédent', () => { S.lessonIdx--; render(); }) : ghostBtn('Accueil', goHome);
+    const next = k < L.length - 1 ? primaryBtn('Suivant', () => { S.lessonIdx++; render(); }) : primaryBtn(`Aux questions (${m.items.length})`, () => { S.screen = 'quiz'; render(); });
+    const tutor = el('button', { class: 'btn tutor-btn', onclick: () => openTutor({ lesson: card }) }, 'Une question ?');
+    app.append(header({ back: true, title: m.title, sub: 'Leçon', color: clsColor(m.cls), progress: [k + 1, L.length] }), main, bar(prev, tutor, next));
+  }
+
+  /* ---------- Module : questions ---------- */
+  let ui = { selected: null, answered: false, correct: false, tapSel: new Set(), typed: '' };
+
+  function currentItemRef() {
+    if (S.phase === 'main') return S.qIdx < S.mainOrder.length ? S.mainOrder[S.qIdx] : null;
+    return S.qIdx < S.reviewQueue.length ? S.reviewQueue[S.qIdx] : null;
+  }
+
+  function quiz() {
+    const m = cur();
+    const ref = currentItemRef();
+    if (ref == null) { return advancePhase(); }
+    const item = m.items[ref];
+    ui = { selected: null, answered: false, correct: false, tapSel: new Set(), typed: '' };
+    const total = S.phase === 'main' ? S.mainOrder.length : S.reviewQueue.length;
+    const main = el('main', { class: 'main quiz', style: `--accent:${clsColor(m.cls)}` });
+    main.append(el('div', { class: 'chip-row' }, classChip(m.cls), el('span', { class: 'qcount' }, S.phase === 'review' ? `Retour sur tes erreurs · ${S.qIdx + 1} / ${total}` : `Question ${S.qIdx + 1} / ${total}`)));
+    main.append(renderItem(item, m));
+    const fb = el('div', { id: 'feedback', class: 'feedback', hidden: true }); main.append(fb);
+    const check = primaryBtn('Vérifier', () => checkAnswer(item, m), { id: 'checkBtn', disabled: true });
+    const hint = ghostBtn('Indice', () => showHint(item, m), { id: 'hintBtn' });
+    app.append(header({ back: true, title: m.title, sub: S.phase === 'review' ? 'Révision des erreurs' : 'Questions', color: clsColor(m.cls), progress: [S.qIdx, total] }), main, bar(hint, check));
+    if (item.t === 'type') setTimeout(() => $('#typeInput')?.focus(), 50);
+  }
+
+  function renderItem(item, m, examMode) {
+    const wrap = el('div', { class: 'item' });
+    wrap.append(el('p', { class: 'q', html: item.q }));
+    if (item.t === 'mc') {
+      const list = el('div', { class: 'opts', role: 'radiogroup' });
+      item.opts.forEach((o, i) => {
+        const b = el('button', { class: 'opt', role: 'radio', 'aria-checked': 'false', html: `<span class="opt-l">${String.fromCharCode(65 + i)}</span><span class="opt-t">${o}</span>`, onclick: () => {
+          if (ui.answered) return;
+          ui.selected = i;
+          list.querySelectorAll('.opt').forEach((x, j) => { x.classList.toggle('sel', j === i); x.setAttribute('aria-checked', j === i); });
+          enableCheck();
+        } });
+        list.append(b);
+      });
+      wrap.append(list);
+    } else if (item.t === 'tap') {
+      const sent = el('p', { class: 'sentence' });
+      tokenize(item.s).forEach((tk, i) => {
+        if (tk.punct) { sent.append(el('span', { class: 'punct' }, tk.text)); }
+        else {
+          const b = el('button', { class: 'tok', 'data-i': i, 'data-n': tk.norm, 'aria-pressed': 'false', onclick: () => {
+            if (ui.answered) return;
+            if (ui.tapSel.has(i)) ui.tapSel.delete(i); else ui.tapSel.add(i);
+            b.classList.toggle('sel', ui.tapSel.has(i)); b.setAttribute('aria-pressed', ui.tapSel.has(i));
+            enableCheck(ui.tapSel.size > 0);
+          } }, tk.text);
+          sent.append(b);
+        }
+        if (!tk.glue) sent.append(' ');
+      });
+      wrap.append(sent);
+      wrap.append(el('p', { class: 'help' }, 'Tape sur un mot pour le sélectionner ; tape de nouveau pour l’enlever.'));
+    } else if (item.t === 'type') {
+      const inp = el('input', { id: 'typeInput', class: 'type-in', type: 'text', lang: 'fr', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false', placeholder: item.placeholder || 'Ta réponse', 'aria-label': 'Ta réponse' });
+      inp.addEventListener('input', () => { ui.typed = inp.value; enableCheck(inp.value.trim().length > 0); });
+      inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !$('#checkBtn').disabled) $('#checkBtn').click(); });
+      wrap.append(inp);
+    }
+    return wrap;
+  }
+  function enableCheck(on = true) { const b = $('#checkBtn'); if (b) b.disabled = !on; }
+
+  function showHint(item, m) {
+    const fb = $('#feedback');
+    fb.hidden = false; fb.className = 'feedback hint';
+    fb.innerHTML = `<p class="fb-title">Indice</p><p>${item.hint || m.defaultHint}</p>`;
+    $('#hintBtn').disabled = true;
+  }
+
+  function evaluate(item) {
+    if (item.t === 'mc') return { ok: ui.selected === item.a, given: ui.selected };
+    if (item.t === 'tap') {
+      const toks = tokenize(item.s);
+      const targets = new Set(item.a.map(x => normTok(x)));
+      const targetIdx = new Set(toks.map((t, i) => targets.has(t.norm) && !t.punct ? i : -1).filter(i => i >= 0));
+      const sel = ui.tapSel;
+      const ok = sel.size === targetIdx.size && [...sel].every(i => targetIdx.has(i));
+      return { ok, targetIdx, given: [...sel].map(i => toks[i].text) };
+    }
+    if (item.t === 'type') {
+      const g = normAns(ui.typed);
+      const acc = item.a.map(normAns);
+      if (acc.includes(g)) return { ok: true, given: ui.typed };
+      if (acc.map(stripAcc).includes(stripAcc(g))) return { ok: true, accentNote: true, given: ui.typed };
+      return { ok: false, given: ui.typed };
+    }
+  }
+
+  function checkAnswer(item, m) {
+    if (ui.answered) return;
+    const r = evaluate(item);
+    ui.answered = true; ui.correct = r.ok;
+    paintResult(item, r);
+    // Statistiques
+    const first = S.phase === 'main';
+    if (first) { S.firstTry[m.id].total++; if (r.ok) S.firstTry[m.id].correct++; if (!r.ok) S.reviewQueue.push(S.mainOrder[S.qIdx]); }
+    else { const ref = S.reviewQueue[S.qIdx]; S.reviewTries[ref] = (S.reviewTries[ref] || 0) + 1; if (!r.ok && S.reviewTries[ref] < REVIEW_TRIES) S.reviewQueue.push(ref); }
+    save();
+    const fb = $('#feedback'); fb.hidden = false; fb.className = 'feedback ' + (r.ok ? 'ok' : 'bad');
+    const title = r.ok ? (r.accentNote ? 'Bonne réponse — attention à l’accent !' : pick(['Bravo !', 'Exact !', 'Bien joué !', 'Oui !', 'Parfait !'])) : 'Pas tout à fait.';
+    let ansLine = '';
+    if (!r.ok || r.accentNote) ansLine = `<p class="fb-ans">Bonne réponse : <b>${correctText(item)}</b></p>`;
+    fb.innerHTML = `<p class="fb-title">${title}</p>${ansLine}<p class="fb-why">${item.why}</p>`;
+    if (!r.ok && S.phase === 'main') fb.append(el('p', { class: 'fb-note' }, 'Cette question reviendra à la fin du module.'));
+    fb.append(el('button', { class: 'btn tutor-btn inline', onclick: () => openTutor({ item, given: r.given, ok: r.ok }) }, r.ok ? 'Demande à Claude' : 'Je ne comprends pas'));
+    // Barre
+    const f = $('.bar'); f.innerHTML = '';
+    f.append(primaryBtn('Suivant', nextQuestion, { id: 'nextBtn' }));
+    setTimeout(() => fb.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+  }
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+
+  function correctText(item) {
+    if (item.t === 'mc') return item.opts[item.a];
+    if (item.t === 'tap') return item.a.map(x => x.replace(/~/g, '')).join(', ');
+    return item.a[0];
+  }
+
+  function paintResult(item, r) {
+    if (item.t === 'mc') {
+      document.querySelectorAll('.opt').forEach((x, j) => {
+        x.disabled = true;
+        if (j === item.a) x.classList.add('right');
+        else if (j === ui.selected) x.classList.add('wrong');
+      });
+    } else if (item.t === 'tap') {
+      document.querySelectorAll('.tok').forEach(b => {
+        const i = +b.dataset.i; b.disabled = true;
+        const isT = r.targetIdx.has(i), isS = ui.tapSel.has(i);
+        if (isT && isS) b.classList.add('right');
+        else if (isS) b.classList.add('wrong');
+        else if (isT) b.classList.add('missed');
+      });
+    } else if (item.t === 'type') {
+      const inp = $('#typeInput'); inp.disabled = true; inp.classList.add(r.ok ? 'right' : 'wrong');
+    }
+  }
+
+  function nextQuestion() {
+    S.qIdx++;
+    render();
+  }
+
+  function advancePhase() {
+    const m = cur();
+    if (S.phase === 'main' && S.reviewQueue.length) { S.phase = 'review'; S.qIdx = 0; S.screen = 'quiz'; return render(); }
+    // Fin du module
+    const ft = S.firstTry[m.id] || { correct: 0, total: m.items.length };
+    S.modules[m.id] = { done: true, correct: ft.correct, total: ft.total, seconds: Math.max(0, S.elapsed - (S.modStart || 0)) };
+    S.phase = 'main'; S.qIdx = 0; S.reviewQueue = [];
+    S.screen = 'modend'; render();
+  }
+
+  function modend() {
+    const m = cur(); const st = S.modules[m.id];
+    const pct = st.total ? st.correct / st.total : 0;
+    const stars = pct >= 0.9 ? 3 : pct >= 0.7 ? 2 : 1;
+    const main = el('main', { class: 'main end', style: `--accent:${clsColor(m.cls)}` });
+    main.append(classChip(m.cls));
+    main.append(el('h2', {}, CFG.modEndTitle || 'Module terminé'));
+    main.append(el('div', { class: 'stars', 'aria-label': `${stars} étoiles sur 3` }, ...[1, 2, 3].map(i => el('span', { class: 'star' + (i <= stars ? ' on' : '') }, '★'))));
+    main.append(el('p', { class: 'score' }, el('b', {}, `${st.correct} / ${st.total}`), ' au premier essai'));
+    const msgs = CFG.endMsgs || ['Excellent. Tu maîtrises cette classe de mots.', 'Bien. Relis l’explication des questions ratées : elles reviendront dans l’examen blanc.', 'C’est la classe à retravailler. Reprends la leçon une fois avant l’examen blanc, ou refais le module maintenant.'];
+    const msg = pct >= 0.9 ? msgs[0] : pct >= 0.7 ? msgs[1] : msgs[2];
+    main.append(el('p', { class: 'lead' }, msg));
+    main.append(el('p', { class: 'foot-note' }, `Temps pour ce module : ${fmtMin(st.seconds)}. Temps total : ${fmtMin(S.elapsed)}.`));
+    const nextIdx = MODULES.findIndex((x, i) => i > S.modIdx && !S.modules[x.id]?.done);
+    const anyLeft = MODULES.findIndex(x => !S.modules[x.id]?.done);
+    let next;
+    if (nextIdx >= 0) next = primaryBtn(`Module suivant : ${MODULES[nextIdx].title}`, () => startModule(nextIdx));
+    else if (anyLeft >= 0) next = primaryBtn(`Continuer : ${MODULES[anyLeft].title}`, () => startModule(anyLeft));
+    else if (HAS_EXAM) next = primaryBtn(`Passer : ${CFG.examTitle}`, startExamIntro);
+    else next = primaryBtn('Accueil', goHome);
+    const redo = ghostBtn('Refaire', () => { delete S.modules[m.id]; S.qIdx = 0; S.phase = 'main'; startModule(S.modIdx); });
+    app.append(header({ back: true, title: m.title, sub: 'Bilan', color: clsColor(m.cls) }), main, bar(redo, next));
+  }
+
+  /* ---------- Examen blanc ---------- */
+  function startExamIntro() { S.screen = 'examintro'; render(); }
+  function examintro() {
+    const main = el('main', { class: 'main end' });
+    main.append(el('p', { class: 'eyebrow' }, 'Comme au vrai examen'));
+    main.append(el('h2', {}, CFG.examTitle));
+    main.append(el('p', { class: 'lead' }, `${EXAM.items.length} questions mélangées sur les 8 classes de mots et les manipulations. Pas d’indice, pas de leçon, et les réponses ne sont montrées qu’à la fin. Prends ton temps : environ ${EXAM.minutes} minutes.`));
+    const notDone = MODULES.filter(m => !S.modules[m.id]?.done);
+    if (notDone.length) main.append(el('p', { class: 'warn-box' }, `Tu n’as pas encore terminé : ${notDone.map(m => m.title).join(', ')}. Tu peux quand même essayer l’examen, mais il sera plus facile après.`));
+    if (S.exam.best != null) main.append(el('p', { class: 'foot-note' }, `Meilleur résultat jusqu’ici : ${S.exam.best} / ${EXAM.items.length}.`));
+    const resume = !S.exam.done && S.exam.order.length && S.exam.idx > 0 && S.exam.idx < S.exam.order.length;
+    const go = primaryBtn(resume ? `Reprendre (question ${S.exam.idx + 1})` : 'Commencer l’examen', () => {
+      if (!resume) { S.exam.attempts++; S.exam.order = shuffle(EXAM.items.map((_, i) => i), 7 + S.exam.attempts * 13); S.exam.idx = 0; S.exam.answers = []; S.exam.done = false; }
+      S.screen = 'exam'; render();
+    });
+    app.append(header({ back: true, title: CFG.examTitle, sub: '' }), main, bar(ghostBtn('Accueil', goHome), go));
+  }
+
+  function exam() {
+    const E = S.exam;
+    if (E.idx >= E.order.length) { return finishExam(); }
+    const item = EXAM.items[E.order[E.idx]];
+    ui = { selected: null, answered: false, correct: false, tapSel: new Set(), typed: '' };
+    const main = el('main', { class: 'main quiz exam-mode' });
+    main.append(el('div', { class: 'chip-row' }, el('span', { class: 'chip exam-chip' }, 'Examen'), el('span', { class: 'qcount' }, `Question ${E.idx + 1} / ${E.order.length}`)));
+    main.append(renderItem(item, null, true));
+    const check = primaryBtn('Réponse suivante', () => {
+      const r = evaluate(item);
+      E.answers.push({ ref: E.order[E.idx], ok: r.ok, given: item.t === 'mc' ? item.opts[ui.selected] : item.t === 'tap' ? r.given.join(', ') : ui.typed });
+      E.idx++; render();
+    }, { id: 'checkBtn', disabled: true });
+    app.append(header({ back: true, title: CFG.examTitle, sub: 'Aucune aide', progress: [E.idx, E.order.length], noMemo: true }), main, bar(check));
+    if (item.t === 'type') setTimeout(() => $('#typeInput')?.focus(), 50);
+  }
+
+  function finishExam() {
+    const E = S.exam; E.done = true;
+    const score = E.answers.filter(a => a.ok).length;
+    if (E.best == null || score > E.best) E.best = score;
+    S.screen = 'examend'; render();
+  }
+
+  function examend() {
+    const E = S.exam; const N = E.answers.length; const score = E.answers.filter(a => a.ok).length;
+    const pct = N ? score / N : 0;
+    const main = el('main', { class: 'main end' });
+    main.append(el('p', { class: 'eyebrow' }, 'Résultat : ' + CFG.examTitle));
+    main.append(el('h2', {}, `${score} / ${N}`));
+    const verdict = pct >= 0.85 ? 'Tu es prêt. Continue comme ça : relis simplement l’aide-mémoire la veille de l’examen.' : pct >= 0.7 ? 'Presque ! Retourne dans les modules indiqués ci-dessous, puis refais l’examen blanc.' : 'Encore un tour. Refais les modules indiqués ci-dessous (leçon + questions), puis reviens passer l’examen.';
+    main.append(el('p', { class: 'lead' }, verdict));
+
+    // Bilan par classe
+    const byTag = {};
+    E.answers.forEach(a => { const it = EXAM.items[a.ref]; (byTag[it.tag] ||= { ok: 0, n: 0 }); byTag[it.tag].n++; if (a.ok) byTag[it.tag].ok++; });
+    const sec = el('section', { class: 'bytag' }, el('h3', {}, 'Par classe de mots'));
+    const weak = [];
+    [...CLASS_ORDER, 'manip'].forEach(k => {
+      const t = byTag[k]; if (!t) return;
+      const p = t.ok / t.n;
+      if (p < 0.75) weak.push(k);
+      const row = el('div', { class: 'tagrow', style: `--accent:${clsColor(k)}` },
+        el('span', { class: 'tagname' }, CLASSES[k].label),
+        el('span', { class: 'tagbar' }, el('span', { class: 'tagfill', style: `width:${p * 100}%` })),
+        el('span', { class: 'tagnum' }, `${t.ok}/${t.n}`));
+      sec.append(row);
+    });
+    main.append(sec);
+    if (weak.length) {
+      const links = el('div', { class: 'weak' }, el('h3', {}, 'À retravailler'));
+      weak.forEach(k => { const mi = MODULES.findIndex(m => m.cls === k); if (mi >= 0) links.append(el('button', { class: 'btn small', style: `--accent:${clsColor(k)}`, onclick: () => { delete S.modules[MODULES[mi].id]; S.qIdx = 0; S.phase = 'main'; startModule(mi); } }, `Refaire : ${MODULES[mi].title}`)); });
+      main.append(links);
+    }
+    // Revue des erreurs
+    const wrong = E.answers.filter(a => !a.ok);
+    const rev = el('section', { class: 'review' }, el('h3', {}, wrong.length ? `Tes erreurs (${wrong.length})` : 'Aucune erreur. Impressionnant.'));
+    wrong.forEach(a => {
+      const it = EXAM.items[a.ref];
+      const d = el('details', { class: 'err', style: `--accent:${clsColor(it.tag)}` });
+      const label = it.t === 'tap' ? `${stripHtml(it.q)} « ${it.s.replace(/~/g, '')} »` : stripHtml(it.q).replace(/^Classe du (mot|groupe) en gras :/, '').trim();
+      d.append(el('summary', { html: `<span class="err-tag">${CLASSES[it.tag].label}</span> ${label}` }));
+      d.append(el('p', { class: 'fb-ans' }, `Ta réponse : ${a.given || '—'}`));
+      d.append(el('p', { class: 'fb-ans', html: `Bonne réponse : <b>${correctText(it)}</b>` }));
+      d.append(el('p', { class: 'fb-why', html: it.why }));
+      d.append(el('button', { class: 'btn tutor-btn inline', onclick: () => openTutor({ item: it, given: a.given, ok: false }) }, 'Je ne comprends pas'));
+      rev.append(d);
+    });
+    main.append(rev);
+    main.append(el('p', { class: 'foot-note' }, `Temps actif total : ${fmtMin(S.elapsed)}.`));
+    app.append(header({ back: true, title: CFG.examTitle, sub: 'Résultat' }), main, bar(ghostBtn('Accueil', goHome), primaryBtn('Refaire l’examen', () => { S.exam.done = true; S.exam.idx = 0; S.exam.order = []; startExamIntro(); })));
+  }
+
+  /* ---------- Aide-mémoire ---------- */
+  const MEMO = [
+    ['nom', 'Variable · donneur d’accord', 'Désigne une personne, un animal, un objet, un lieu, un sentiment. Noyau du GN.', 'Remplace par un autre nom (navire → bateau) ; ajoute un adjectif (la grande porte).', 'le lapin, une idée, Montréal, la joie'],
+    ['det', 'Variable · receveur d’accord', 'Introduit un nom ; toujours à gauche d’un nom. Défini, indéfini, possessif, démonstratif, numéral.', 'Remplace par un autre déterminant (beaucoup de → des). Devant un NOM = dét., devant un VERBE = pronom.', 'le, une, plusieurs, cette, mon, trois, beaucoup de'],
+    ['adj', 'Variable · receveur d’accord', 'Qualité, caractéristique ou classement. Noyau du GAdj. Qualifiant (très + adj ✓) ou classifiant.', 'Remplace par un autre adjectif (touchant → drôle). Adjectif ou participe présent ? ne… pas possible = verbe.', 'moite, bon, solaire, québécoise, accomplie'],
+    ['pro', 'Variable · donneur d’accord', 'Remplace un groupe (reprise, avec antécédent) ou désigne qui parle (communication).', 'Remplace par l’antécédent (Elle → Prune). À gauche/droite d’un VERBE = pronom.', 'il, elle, les, lui, en, y, qui, celui-ci, le mien'],
+    ['verbe', 'Variable · se conjugue', 'Action, état, émotion, situés dans le temps. Noyau du GV. Temps simple ou composé (aux. + p. p.).', 'Encadre par ne… pas (l’auxiliaire seulement si composé) ; change le temps (cours → courais).', 'aimer, tu cours, nous avons aimé, elle est arrivée'],
+    ['adv', 'INVARIABLE · effaçable', 'Modifie un verbe, un adjectif ou un adverbe. Négation, temps, lieu, manière, intensité…', 'Efface-le ; remplace par un autre adverbe (couramment → vraiment). Jamais précédé d’un déterminant.', 'très, bien, mal, ici, souvent, rapidement, ne… pas, là-bas'],
+    ['prep', 'INVARIABLE · jamais seule', 'Introduit un complément à sa droite. Noyau du GPrép. Sens : lieu, temps, cause, but, moyen…', 'Remplace par une autre préposition (à cause de → avant). « de » : mets au singulier, remplace par un/le.', 'à, de, dans, pour, sans, vers, grâce à, au lieu de'],
+    ['conj', 'INVARIABLE · jamais déplaçable', 'Coordination : relie des éléments de même fonction. Subordination : introduit une phrase dans une autre.', 'Remplace par une autre conjonction (aussitôt que → quand). On ne peut pas la déplacer (contrairement à l’adverbe).', 'et, ou, mais, car, quand, lorsque, parce que, tandis que']
+  ];
+  function openMemo() {
+    const sheet = $('#sheet'); sheet.innerHTML = '';
+    const box = el('div', { class: 'sheet-box', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Aide-mémoire' });
+    box.append(el('div', { class: 'sheet-head' }, el('h2', {}, 'Aide-mémoire'), el('button', { class: 'icon-btn', 'aria-label': 'Fermer', onclick: closeSheet }, svgClose())));
+    const body = el('div', { class: 'sheet-body' });
+    body.append(el('p', { class: 'memo-intro' }, 'Le test principal : par quel mot connu puis-je le remplacer ? Le mot de remplacement a la même classe.'));
+    MEMO.forEach(([k, kind, what, how, ex]) => {
+      body.append(el('div', { class: 'memo', style: `--accent:${clsColor(k)}` },
+        el('div', { class: 'memo-h' }, classChip(k), el('span', { class: 'memo-kind' }, kind)),
+        el('p', {}, what), el('p', { html: `<b>Pour le reconnaître :</b> ${how}` }), el('p', { class: 'memo-ex' }, ex)));
+    });
+    body.append(el('div', { class: 'memo manip', style: `--accent:${clsColor('manip')}` },
+      el('div', { class: 'memo-h' }, classChip('manip'), el('span', { class: 'memo-kind' }, '5 outils')),
+      el('p', { html: '<b>Ajout</b> (+ un adjectif → nom) · <b>Déplacement</b> (→ complément de phrase) · <b>Effacement</b> (→ facultatif ; l’adverbe s’efface) · <b>Encadrement</b> (c’est… qui → sujet ; ne… pas → verbe) · <b>Remplacement</b> (→ classe du mot)' })));
+    box.append(body);
+    sheet.append(box); sheet.hidden = false; document.body.classList.add('sheet-open');
+  }
+  function closeSheet() { $('#sheet').hidden = true; $('#sheet').innerHTML = ''; document.body.classList.remove('sheet-open'); tutorCtl?.abort(); }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#sheet').hidden) closeSheet(); });
+
+  /* ---------- Tuteur ---------- */
+  let tutorCtl = null;
+  function tutorContext(ctx) {
+    const lines = ['Tu es un tuteur de français patient pour un élève de secondaire 1 au Québec (12-13 ans). Il révise la partie « Les classes de mots » de son cahier de grammaire : nom, déterminant, adjectif, pronom, verbe (classes variables) ; adverbe, préposition, conjonction (classes invariables) ; et les manipulations syntaxiques (ajout, déplacement, effacement, encadrement, remplacement).',
+      'Règles : réponds en français simple, tutoie-le, 3 à 6 phrases maximum, sans liste à puces ni titres. Donne toujours un nouvel exemple concret et montre le test à faire (remplacement, encadrement par ne… pas, effacement, etc.). Utilise le vocabulaire de son manuel : donneur/receveur d’accord, groupe nominal (GN), antécédent, classe variable/invariable, déterminant composé, etc. Ne parle que de cette question ; n’invente pas d’autres exercices.'];
+    if (ctx.lesson) lines.push(`Leçon qu’il lit en ce moment : « ${stripHtml(ctx.lesson.h)} » — ${stripHtml(ctx.lesson.b).slice(0, 1500)}`);
+    if (ctx.item) {
+      lines.push(`Question de l’exercice : ${stripHtml(ctx.item.q)}${ctx.item.s ? ' Phrase : « ' + ctx.item.s.replace(/~/g, '') + ' »' : ''}`);
+      if (ctx.item.opts) lines.push(`Choix offerts : ${ctx.item.opts.map(stripHtml).join(' / ')}`);
+      lines.push(`Réponse de l’élève : ${Array.isArray(ctx.given) ? ctx.given.join(', ') : (ctx.given != null && ctx.given !== '' ? (typeof ctx.given === 'number' ? stripHtml(ctx.item.opts[ctx.given]) : stripHtml(String(ctx.given))) : '(aucune)')} — ${ctx.ok ? 'c’était correct' : 'c’était incorrect'}.`);
+      lines.push(`Bonne réponse : ${stripHtml(correctText(ctx.item))}. Explication du manuel : ${stripHtml(ctx.item.why)}`);
+    }
+    return lines.join('\n');
+  }
+  function openTutor(ctx) {
+    if (!sampleFn) return;
+    const sheet = $('#sheet'); sheet.innerHTML = '';
+    const box = el('div', { class: 'sheet-box tutor', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Demande à Claude' });
+    box.append(el('div', { class: 'sheet-head' }, el('h2', {}, 'Demande à Claude'), el('button', { class: 'icon-btn', 'aria-label': 'Fermer', onclick: closeSheet }, svgClose())));
+    const body = el('div', { class: 'sheet-body' });
+    const out = el('div', { class: 'tutor-out' }, el('p', { class: 'muted' }, ctx.item ? 'Choisis une question rapide ou écris la tienne.' : 'Pose ta question sur cette leçon.'));
+    const quick = el('div', { class: 'quick' });
+    const qs = ctx.item ? ['Explique-moi autrement', 'Donne-moi un autre exemple', 'Quel test je devais faire ?'] : ['Explique-moi plus simplement', 'Donne-moi un exemple', 'Pourquoi c’est important ?'];
+    const turns = [];
+    const ask = async (msg) => {
+      tutorCtl?.abort(); tutorCtl = new AbortController();
+      turns.push({ role: 'user', content: msg });
+      const bubble = el('div', { class: 'bubble ai' }, 'Claude réfléchit…');
+      out.append(el('div', { class: 'bubble me' }, msg), bubble); bubble.scrollIntoView({ block: 'nearest' });
+      try {
+        const { text } = await sampleFn([{ role: 'user', content: tutorContext(ctx) }, ...turns], { modelTier: 'quick', cache: false, signal: tutorCtl.signal, onText: ({ text }) => { bubble.textContent = text; } });
+        turns.push({ role: 'assistant', content: text });
+      } catch (e) {
+        if (e && e.code === 'cancelled') { bubble.remove(); return; }
+        if (e && (e.code === 'not_granted' || e.code === 'sampling_disabled' || e.code === 'not_declared' || e.code === 'capability_disabled')) { sampleFn = null; document.body.classList.remove('has-tutor'); bubble.textContent = 'Le tuteur n’est pas disponible ici. Relis l’explication ci-dessus : elle contient le test à faire.'; return; }
+        bubble.textContent = (e && e.text) ? e.text : (e && e.code === 'rate_limited' ? 'Claude est occupé pour l’instant. Réessaie dans une minute.' : 'Ça n’a pas fonctionné. Réessaie.');
+      }
+    };
+    qs.forEach(q => quick.append(el('button', { class: 'btn small', onclick: () => ask(q) }, q)));
+    const form = el('form', { class: 'tutor-form', onsubmit: e => { e.preventDefault(); const v = inp.value.trim(); if (!v) return; inp.value = ''; ask(v); } });
+    const inp = el('input', { id: 'tutorInput', class: 'type-in', type: 'text', lang: 'fr', placeholder: 'Écris ta question…', 'aria-label': 'Ta question', autocomplete: 'off' });
+    form.append(inp, el('button', { class: 'btn primary', type: 'submit' }, 'Envoyer'));
+    body.append(out, quick, form);
+    body.append(el('p', { class: 'muted small' }, 'Claude ne voit que cette question et la leçon ; il ne connaît pas les autres réponses.'));
+    box.append(body);
+    sheet.append(box); sheet.hidden = false; document.body.classList.add('sheet-open');
+  }
+
+  /* ---------- Petits composants ---------- */
+  function classChip(k) { return el('span', { class: 'chip', style: `--accent:${clsColor(k)}` }, CLASSES[k].label); }
+  function svgBack() { return el('span', { class: 'svg', html: '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>' }); }
+  function svgBook() { return el('span', { class: 'svg', html: '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 19a2.5 2.5 0 0 1 2.5-2.5H20" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 8h7M9 11.5h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>' }); }
+  function svgClose() { return el('span', { class: 'svg', html: '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>' }); }
+  function svgCheck() { return el('span', { class: 'svg', html: '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>' }); }
+
+  /* ---------- Démarrage ---------- */
+  // Si on recharge au milieu d’une leçon/question, on reprend là. Une fin de module ou d’examen affichée reste affichée.
+  if (!['home', 'lesson', 'quiz', 'modend', 'examintro', 'exam', 'examend'].includes(S.screen)) S.screen = 'home';
+  if (S.screen === 'exam' && (!S.exam.order.length || S.exam.done)) S.screen = 'examintro';
+  if (!HAS_EXAM && ['examintro', 'exam', 'examend'].includes(S.screen)) S.screen = 'home';
+  render();
+})();
+</script>
+</body></html>
