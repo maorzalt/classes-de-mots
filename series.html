@@ -331,6 +331,8 @@ const CL  = (k, q, why, hint) => ({ t:'type', tag:k, q:'Écris la <b>classe</b> 
 const W   = (k, q, a, why, hint, placeholder) => ({ t:'type', tag:k, q, a:Array.isArray(a) ? a : [a], placeholder: placeholder || '…', why, hint });
 const MC  = (k, q, opts, a, why, hint) => ({ t:'mc', tag:k, q, opts, a, why, hint });
 const TAP = (k, q, s, a, why, hint) => ({ t:'tap', tag:k, q, s, a, why, hint });
+const NUMW = ['zéro','un','deux','trois','quatre','cinq','six'];
+const CNT = (k, label, s, n, why, hint) => ({ t:'type', tag:k, q:'<b>Combien</b> y a-t-il de ' + label + ' dans cette phrase ? Écris le nombre.<br>« ' + s + ' »', a: n === 0 ? ['0','zéro','zero','aucun','aucune'] : [String(n), NUMW[n]], placeholder:'un nombre', why, hint });
 const MAN = (q, a, why, hint) => ({ t:'mc', tag:'manip', q: q + '<br>Quelle manipulation a-t-on faite ?', opts: MANIP_OPTS, a, why, hint });
 
 /* Mélange déterministe (même ordre à chaque ouverture) */
@@ -492,7 +494,7 @@ SERIES.push({ id:'b', title:'Série B', seed: 23, groups: [
 ],
 /* nom (6) */
 [
-  TAP('nom', 'Tape sur les <b>noms</b> (il y en a 3).', 'Le facteur apporte une lettre à ma grand-mère.', ['facteur','lettre','grand-mère'],
+  TAP('nom', 'Tape sur les <b>noms</b>.', 'Le facteur apporte une lettre à ma grand-mère.', ['facteur','lettre','grand-mère'],
     '<i>facteur</i>, <i>lettre</i>, <i>grand-mère</i> : chacun a un déterminant devant (<i>le, une, ma</i>). <i>grand-mère</i> est un seul nom, avec un trait d’union.'),
   CL('nom', '« La <b>pluie</b> tombe depuis ce matin. »',
     '<i>pluie</i> désigne une chose et a un déterminant devant (<i>la</i>) → <b>nom</b>. Remplace par un autre nom : <i>la neige tombe</i>.'),
@@ -502,12 +504,12 @@ SERIES.push({ id:'b', title:'Série B', seed: 23, groups: [
     'Le noyau est <b>maisons</b> : <i>ces</i> et <i>trois</i> l’introduisent, <i>petites</i> et <i>blanches</i> le décrivent et s’accordent avec lui.', 'Quel mot ne peut pas être effacé ?', 'le noyau'),
   MC('nom', '« Il <b>cuisine</b> un bon repas. »<br><i>cuisine</i> est…', ['un nom', 'un verbe'], 1,
     '<i>Il ne cuisine pas</i> : l’encadrement fonctionne → <b>verbe</b>. Dans <i>la cuisine est propre</i>, <i>cuisine</i> serait un nom.'),
-  W('nom', '« Mon chat s’appelle <b>Félix</b>. »<br>Ce nom est-il <b>commun</b> ou <b>propre</b> ? Écris le mot.', ['propre','nom propre'],
-    '<i>Félix</i> nomme un individu précis et prend une majuscule → nom <b>propre</b>. <i>chat</i>, lui, est un nom commun.', null, 'commun ou propre')
+  CNT('nom', '<b>noms</b>', 'Ma voisine promène son chien près de la rivière.', 3,
+    'Trois noms : <i>voisine</i>, <i>chien</i>, <i>rivière</i>. <i>près de</i> est une préposition, <i>promène</i> un verbe.')
 ],
 /* déterminant (6) */
 [
-  TAP('det', 'Tape sur les <b>déterminants</b> (il y en a 4).', 'Chaque matin, mon père lit le journal avec son café.', ['Chaque','mon','le','son'],
+  TAP('det', 'Tape sur les <b>déterminants</b>.', 'Chaque matin, mon père lit le journal avec son café.', ['Chaque','mon','le','son'],
     '<i>Chaque</i> (matin), <i>mon</i> (père), <i>le</i> (journal), <i>son</i> (café) : chacun introduit un nom.'),
   CL('det', '« <b>Quelques</b> nuages passent. »',
     '<i>Quelques</i> introduit le nom <i>nuages</i> → <b>déterminant</b> (indéfini). Remplace par <i>des</i> : <i>des nuages passent</i>.'),
@@ -522,12 +524,12 @@ SERIES.push({ id:'b', title:'Série B', seed: 23, groups: [
 ],
 /* adjectif (6) */
 [
-  TAP('adj', 'Tape sur les <b>adjectifs</b> (il y en a 3).', 'Cette longue route étroite traverse un village tranquille.', ['longue','étroite','tranquille'],
+  TAP('adj', 'Tape sur les <b>adjectifs</b>.', 'Cette longue route étroite traverse un village tranquille.', ['longue','étroite','tranquille'],
     '<i>longue</i> et <i>étroite</i> décrivent <i>route</i> ; <i>tranquille</i> décrit <i>village</i>. On peut ajouter <i>très</i> devant chacun.'),
   CL('adj', '« Un exercice <b>facile</b>. »',
     '<i>facile</i> décrit le nom <i>exercice</i> et s’accorde (<i>des exercices faciles</i>) → <b>adjectif</b>. Test : <i>très facile</i>.'),
-  CL('adj', '« Des nuages <b>gris</b> couvrent le ciel. »',
-    '<i>gris</i> décrit <i>nuages</i> et s’accorde (<i>une brume grise</i>) → <b>adjectif</b>.'),
+  CNT('adj', '<b>adjectifs</b>', 'Cette vieille maison grise a un toit rouge.', 3,
+    'Trois adjectifs : <i>vieille</i> et <i>grise</i> (maison), <i>rouge</i> (toit). <i>Cette</i> et <i>un</i> sont des déterminants.'),
   MC('adj', '« Ces fleurs sentent <b>bon</b>. »<br><i>bon</i> est…', ['un adjectif', 'un adverbe'], 1,
     'Il modifie le verbe <i>sentent</i> et reste invariable (<i>elles sentent bon</i>, pas <i>*bonnes</i>) → <b>adverbe</b>. Dans <i>une bonne odeur</i>, adjectif.'),
   W('adj', '« Une (petit) maison. »<br>Écris l’adjectif correctement <b>accordé</b>.', ['petite'],
@@ -537,7 +539,7 @@ SERIES.push({ id:'b', title:'Série B', seed: 23, groups: [
 ],
 /* pronom (6) */
 [
-  TAP('pro', 'Tape sur les <b>pronoms</b> (il y en a 5).', 'Je te prête mon vélo si tu me le rends demain.', ['Je','te','tu','me','le'],
+  TAP('pro', 'Tape sur les <b>pronoms</b>.', 'Je te prête mon vélo si tu me le rends demain.', ['Je','te','tu','me','le'],
     '<i>Je, te, tu, me</i> désignent qui parle et à qui on parle ; <i>le</i> (devant le verbe <i>rends</i>) remplace <i>mon vélo</i>. <i>mon</i>, devant le nom <i>vélo</i>, est un déterminant.'),
   CL('pro', '« <b>Ceux</b> qui veulent venir lèvent la main. »',
     '<i>Ceux</i> remplace un GN (<i>les élèves</i>) et est sujet de <i>lèvent</i> → <b>pronom</b> démonstratif.'),
@@ -552,7 +554,7 @@ SERIES.push({ id:'b', title:'Série B', seed: 23, groups: [
 ],
 /* verbe (6) */
 [
-  TAP('verbe', 'Tape sur les verbes <b>conjugués</b> (il y en a 2).', 'Si tu veux, nous pouvons partir maintenant.', ['veux','pouvons'],
+  TAP('verbe', 'Tape sur les verbes <b>conjugués</b>.', 'Si tu veux, nous pouvons partir maintenant.', ['veux','pouvons'],
     '<i>ne veux pas</i>, <i>ne pouvons pas</i> : encadrement réussi. <i>partir</i> est à l’infinitif (<i>ne pas partir</i>), donc pas conjugué.'),
   W('verbe', '« Vous <b>buvez</b> de l’eau. »<br>Écris l’<b>infinitif</b>.', ['boire'],
     '<i>buvez</i> → <b>boire</b>. Astuce : <i>il faut boire</i>.', null, 'infinitif'),
@@ -567,12 +569,12 @@ SERIES.push({ id:'b', title:'Série B', seed: 23, groups: [
 ],
 /* adverbe (6) */
 [
-  TAP('adv', 'Tape sur les <b>adverbes</b> (il y en a 3).', 'Hier, il a plu beaucoup, mais aujourd’hui le soleil brille.', ['Hier','beaucoup','aujourd’hui'],
+  TAP('adv', 'Tape sur les <b>adverbes</b>.', 'Hier, il a plu beaucoup, mais aujourd’hui le soleil brille.', ['Hier','beaucoup','aujourd’hui'],
     '<i>Hier</i> et <i>aujourd’hui</i> (temps), <i>beaucoup</i> (quantité) : invariables et effaçables. <i>mais</i> est une conjonction.'),
   W('adv', 'Écris l’<b>adverbe</b> formé à partir de l’adjectif « doux ».', ['doucement'],
     'On part du féminin : <i>douce</i> + <i>-ment</i> → <b>doucement</b>.', null, 'adverbe en -ment'),
-  CL('adv', '« Elle parle <b>lentement</b>. »',
-    '<i>lentement</i> (manière, en <i>-ment</i>) modifie le verbe <i>parle</i>, effaçable et invariable → <b>adverbe</b>.'),
+  CNT('adv', '<b>adverbes</b>', 'Le train arrive toujours à l’heure.', 1,
+    'Un seul adverbe : <i>toujours</i>. <i>à l’heure</i> est un groupe prépositionnel (préposition <i>à</i> + GN), pas un adverbe.'),
   CL('adv', '« Je <b>ne</b> sais <b>pas</b>. »<br>(Les deux mots en gras forment un seul mot de négation.)',
     '<i>ne… pas</i> est un <b>adverbe</b> de négation, invariable. Il encadre justement le verbe conjugué <i>sais</i>.'),
   W('adv', '« Ma sœur chante toujours sous la douche. »<br>Écris l’<b>adverbe</b> de cette phrase.', ['toujours'],
@@ -582,7 +584,7 @@ SERIES.push({ id:'b', title:'Série B', seed: 23, groups: [
 ],
 /* préposition (5) */
 [
-  TAP('prep', 'Tape sur les <b>prépositions</b> (il y en a 3).', 'Le train pour Québec part de la gare à midi.', ['pour','de','à'],
+  TAP('prep', 'Tape sur les <b>prépositions</b>.', 'Le train pour Québec part de la gare à midi.', ['pour','de','à'],
     '<i>pour Québec</i>, <i>de la gare</i>, <i>à midi</i> : chaque préposition introduit un complément à sa droite.'),
   CL('prep', '« Un cadeau <b>pour</b> toi. »',
     '<i>pour</i> introduit le complément <i>toi</i> → <b>préposition</b>. Remplace par une autre préposition : <i>un cadeau de toi</i>.'),
@@ -590,12 +592,12 @@ SERIES.push({ id:'b', title:'Série B', seed: 23, groups: [
     '<i>avant</i> introduit le complément <i>la pluie</i> → <b>préposition</b>. Seul, sans complément (<i>elle est arrivée avant</i>), il serait adverbe.'),
   MC('prep', '« Il court <b>afin de</b> gagner. »<br><i>afin de</i> est…', ['une préposition (suivie d’un infinitif)', 'une conjonction (suivie d’un verbe conjugué)'], 0,
     '<i>afin de</i> + infinitif (<i>gagner</i>) → <b>préposition</b>. La conjonction serait <i>afin qu’il gagne</i>.'),
-  MC('prep', '« Nous jouerons <b>après</b> le souper. »<br>La préposition exprime…', ['le temps', 'le lieu', 'la cause'], 0,
-    '<i>après le souper</i> situe l’action dans le <b>temps</b>.')
+  CNT('verbe', 'verbes <b>conjugués</b>', 'Les élèves veulent finir avant que la cloche sonne.', 2,
+    'Deux verbes conjugués : <i>ne veulent pas</i>, <i>ne sonne pas</i>. <i>finir</i> est à l’infinitif (<i>ne pas finir</i>) : il ne compte pas.')
 ],
 /* conjonction (4) */
 [
-  TAP('conj', 'Tape sur les <b>conjonctions</b> (il y en a 2).', 'Il fait froid, mais il ne neige pas, car le ciel est clair.', ['mais','car'],
+  TAP('conj', 'Tape sur les <b>conjonctions</b>.', 'Il fait froid, mais il ne neige pas, car le ciel est clair.', ['mais','car'],
     '<i>mais</i> (opposition) et <i>car</i> (cause) relient des phrases → conjonctions de coordination. <i>ne… pas</i> est un adverbe.'),
   CL('conj', '« Je resterai <b>si</b> tu restes. »',
     '<i>si</i> introduit une phrase avec un verbe conjugué (<i>tu restes</i>) dans une autre → <b>conjonction</b> de subordination.'),
@@ -623,7 +625,7 @@ SERIES.push({ id:'c', title:'Série C', seed: 37, groups: [
 ],
 /* nom (6) */
 [
-  TAP('nom', 'Tape sur les <b>noms</b> (il y en a 4).', 'Sur la plage, les enfants construisent un château de sable.', ['plage','enfants','château','sable'],
+  TAP('nom', 'Tape sur les <b>noms</b>.', 'Sur la plage, les enfants construisent un château de sable.', ['plage','enfants','château','sable'],
     '<i>plage</i>, <i>enfants</i>, <i>château</i>, <i>sable</i> : on peut mettre un déterminant devant chacun (<i>la plage, les enfants, un château, du sable</i>).'),
   CL('nom', '« Le <b>courage</b> de ce pompier m’impressionne. »',
     '<i>courage</i> désigne une qualité (un nom peut être abstrait) et a un déterminant devant (<i>le</i>) → <b>nom</b>.'),
@@ -633,12 +635,12 @@ SERIES.push({ id:'c', title:'Série C', seed: 37, groups: [
     'Le déterminant <i>un</i> introduit <b>coucher</b> ; <i>magnifique</i> le décrit ; <i>de soleil</i> le complète. Ici, <i>coucher</i> est un nom, pas un verbe.', 'Quel mot ne peut pas être effacé ?', 'le noyau'),
   MC('nom', '« Le <b>sourire</b> de Julie est contagieux. »<br><i>sourire</i> est…', ['un nom', 'un verbe'], 0,
     '<i>le sourire</i> : un déterminant devant → <b>nom</b>. Dans <i>elle sourit</i>, ce serait le verbe.'),
-  W('nom', '« Je vais à <b>Trois-Rivières</b>. »<br>Ce nom est-il <b>commun</b> ou <b>propre</b> ? Écris le mot.', ['propre','nom propre'],
-    '<i>Trois-Rivières</i> nomme une ville précise, avec des majuscules → nom <b>propre</b>.', null, 'commun ou propre')
+  CNT('nom', '<b>noms</b>', 'Pendant la nuit, la neige a recouvert les rues et les toits.', 4,
+    'Quatre noms : <i>nuit</i>, <i>neige</i>, <i>rues</i>, <i>toits</i>. <i>a recouvert</i> est un verbe à un temps composé.')
 ],
 /* déterminant (6) */
 [
-  TAP('det', 'Tape sur les <b>déterminants</b> (il y en a 3).', 'Ce matin, deux cyclistes ont traversé notre village.', ['Ce','deux','notre'],
+  TAP('det', 'Tape sur les <b>déterminants</b>.', 'Ce matin, deux cyclistes ont traversé notre village.', ['Ce','deux','notre'],
     '<i>Ce</i> (matin), <i>deux</i> (cyclistes), <i>notre</i> (village) : chacun introduit un nom. <i>ont</i> est l’auxiliaire du verbe.'),
   CL('det', '« <b>Aucun</b> bruit ne sort de la pièce. »',
     '<i>Aucun</i> introduit le nom <i>bruit</i> → <b>déterminant</b> (indéfini). Remplace par <i>un</i> : <i>un bruit</i>.'),
@@ -653,12 +655,12 @@ SERIES.push({ id:'c', title:'Série C', seed: 37, groups: [
 ],
 /* adjectif (6) */
 [
-  TAP('adj', 'Tape sur les <b>adjectifs</b> (il y en a 3).', 'Une soupe chaude et une salade fraîche attendent les invités affamés.', ['chaude','fraîche','affamés'],
+  TAP('adj', 'Tape sur les <b>adjectifs</b>.', 'Une soupe chaude et une salade fraîche attendent les invités affamés.', ['chaude','fraîche','affamés'],
     '<i>chaude</i> (soupe), <i>fraîche</i> (salade), <i>affamés</i> (invités) : chacun décrit un nom et s’accorde avec lui.'),
   CL('adj', '« Une leçon <b>ennuyeuse</b>. »',
     '<i>ennuyeuse</i> décrit <i>leçon</i> et s’accorde (<i>ennuyeux / ennuyeuse</i>) → <b>adjectif</b>. Test : <i>très ennuyeuse</i>.'),
-  CL('adj', '« Des chaussures <b>neuves</b>. »',
-    '<i>neuves</i> décrit <i>chaussures</i>, féminin pluriel comme le nom → <b>adjectif</b>.'),
+  CNT('adj', '<b>adjectifs</b>', 'Les enfants fatigués dorment.', 1,
+    'Un seul adjectif : <i>fatigués</i>, qui décrit <i>enfants</i>. <i>Les</i> est un déterminant, <i>dorment</i> un verbe.'),
   MC('adj', '« Elles ont payé <b>cher</b>. »<br><i>cher</i> est…', ['un adjectif', 'un adverbe'], 1,
     'Il modifie le verbe <i>ont payé</i> et reste invariable (pas <i>*chères</i>) → <b>adverbe</b>. Dans <i>un repas cher</i>, adjectif.'),
   W('adj', '« Des exercices (difficile). »<br>Écris l’adjectif correctement <b>accordé</b>.', ['difficiles'],
@@ -668,7 +670,7 @@ SERIES.push({ id:'c', title:'Série C', seed: 37, groups: [
 ],
 /* pronom (6) */
 [
-  TAP('pro', 'Tape sur les <b>pronoms</b> (il y en a 4).', 'Vous nous avez aidés, alors nous vous remercions.', ['Vous','nous','vous'],
+  TAP('pro', 'Tape sur les <b>pronoms</b>.', 'Vous nous avez aidés, alors nous vous remercions.', ['Vous','nous','vous'],
     '<i>Vous, nous, nous, vous</i> : quatre pronoms personnels, deux fois chacun. <i>alors</i> est un adverbe.'),
   CL('pro', '« <b>Cela</b> ne me dérange pas. »',
     '<i>Cela</i> est sujet du verbe et remplace une idée ou une phrase → <b>pronom</b> démonstratif.'),
@@ -683,7 +685,7 @@ SERIES.push({ id:'c', title:'Série C', seed: 37, groups: [
 ],
 /* verbe (6) */
 [
-  TAP('verbe', 'Tape sur les verbes <b>conjugués</b> (il y en a 2).', 'Les élèves écoutent pendant que le professeur explique la leçon.', ['écoutent','explique'],
+  TAP('verbe', 'Tape sur les verbes <b>conjugués</b>.', 'Les élèves écoutent pendant que le professeur explique la leçon.', ['écoutent','explique'],
     '<i>n’écoutent pas</i>, <i>n’explique pas</i> : deux verbes conjugués, un dans chaque phrase.'),
   W('verbe', '« Tu <b>reçois</b> une lettre. »<br>Écris l’<b>infinitif</b>.', ['recevoir'],
     '<i>reçois</i> → <b>recevoir</b>. Astuce : <i>il faut recevoir</i>.', null, 'infinitif'),
@@ -698,14 +700,14 @@ SERIES.push({ id:'c', title:'Série C', seed: 37, groups: [
 ],
 /* adverbe (6) */
 [
-  TAP('adv', 'Tape sur les <b>adverbes</b> (il y en a 2).', 'Il travaille beaucoup, mais il se repose rarement.', ['beaucoup','rarement'],
+  TAP('adv', 'Tape sur les <b>adverbes</b>.', 'Il travaille beaucoup, mais il se repose rarement.', ['beaucoup','rarement'],
     '<i>beaucoup</i> (quantité) et <i>rarement</i> (temps, en <i>-ment</i>) modifient les verbes. <i>mais</i> est une conjonction.'),
   W('adv', 'Écris l’<b>adverbe</b> formé à partir de l’adjectif « heureux ».', ['heureusement'],
     'Féminin <i>heureuse</i> + <i>-ment</i> → <b>heureusement</b>.', null, 'adverbe en -ment'),
   CL('adv', '« Le film était <b>vraiment</b> long. »',
     '<i>vraiment</i> modifie l’adjectif <i>long</i> (intensité), invariable → <b>adverbe</b>.'),
-  CL('adv', '« Viens <b>ici</b>. »',
-    '<i>ici</i> indique le lieu, modifie le verbe <i>viens</i>, invariable → <b>adverbe</b>.'),
+  CNT('adv', '<b>adverbes</b>', 'Hier, mon frère a beaucoup travaillé et il s’est reposé longtemps.', 3,
+    'Trois adverbes : <i>Hier</i> (temps), <i>beaucoup</i> (quantité), <i>longtemps</i> (temps). <i>et</i> est une conjonction.'),
   W('adv', '« Les élèves attendent patiemment leur tour. »<br>Écris le mot <b>invariable</b> de cette phrase.', ['patiemment'],
     '<i>patiemment</i> (adverbe en <i>-ment</i>) ne change jamais. Les autres mots varient : <i>les, élèves, attendent, leur / leurs, tour</i>.', null, 'le mot invariable'),
   MC('adv', '« Elle marche <b>derrière</b>. »<br><i>derrière</i> est…', ['un adverbe', 'une préposition'], 0,
@@ -713,7 +715,7 @@ SERIES.push({ id:'c', title:'Série C', seed: 37, groups: [
 ],
 /* préposition (5) */
 [
-  TAP('prep', 'Tape sur les <b>prépositions</b> (il y en a 3).', 'Pendant l’été, nous campons sous la tente avec nos cousins.', ['Pendant','sous','avec'],
+  TAP('prep', 'Tape sur les <b>prépositions</b>.', 'Pendant l’été, nous campons sous la tente avec nos cousins.', ['Pendant','sous','avec'],
     '<i>Pendant l’été</i>, <i>sous la tente</i>, <i>avec nos cousins</i> : trois GPrép. La préposition est le premier mot de chacun.'),
   CL('prep', '« Il parle <b>sans</b> arrêt. »',
     '<i>sans</i> introduit le complément <i>arrêt</i> → <b>préposition</b>. Remplace par une autre : <i>avec passion</i>.'),
@@ -721,12 +723,12 @@ SERIES.push({ id:'c', title:'Série C', seed: 37, groups: [
     '<i>chez</i> introduit le complément <i>le dentiste</i> (lieu) → <b>préposition</b>.'),
   MC('prep', '« Il sourit <b>malgré</b> la douleur. »<br><i>malgré</i> est…', ['une préposition', 'une conjonction'], 0,
     '<i>malgré</i> + GN (<i>la douleur</i>), sans verbe conjugué → <b>préposition</b>. La conjonction serait <i>bien qu’il souffre</i>.'),
-  MC('prep', '« Le chat dort <b>sous</b> la table. »<br>La préposition exprime…', ['le lieu', 'le temps', 'le but'], 0,
-    '<i>sous la table</i> situe le chat dans l’espace : le <b>lieu</b>.')
+  CNT('verbe', 'verbes <b>conjugués</b>', 'Marcher chaque jour pour rester en forme.', 0,
+    'Aucun ! <i>Marcher</i> et <i>rester</i> sont des verbes à l’<b>infinitif</b> : on ne peut pas les encadrer par <i>ne… pas</i> (on dit <i>ne pas marcher</i>). Ce n’est même pas une phrase complète.')
 ],
 /* conjonction (4) */
 [
-  TAP('conj', 'Tape sur les <b>conjonctions</b> (il y en a 2).', 'Il neige et il vente, mais nous sortons quand même.', ['et','mais'],
+  TAP('conj', 'Tape sur les <b>conjonctions</b>.', 'Il neige et il vente, mais nous sortons quand même.', ['et','mais'],
     '<i>et</i> et <i>mais</i> relient des phrases → coordination. <i>quand même</i> est ici une expression adverbiale.'),
   CL('conj', '« Je pense <b>que</b> tu as raison. »',
     '<i>que</i> introduit la phrase <i>tu as raison</i> dans une autre et ne remplace rien → <b>conjonction</b> de subordination. (Le pronom relatif <i>que</i>, lui, reprend un nom : <i>le livre que je lis</i>.)'),
@@ -753,7 +755,7 @@ SERIES.push({ id:'d', title:'Série D', seed: 53, groups: [
 ],
 /* nom (6) */
 [
-  TAP('nom', 'Tape sur les <b>noms</b> (il y en a 4).', 'Ma tante a planté des tomates et des concombres dans son jardin.', ['tante','tomates','concombres','jardin'],
+  TAP('nom', 'Tape sur les <b>noms</b>.', 'Ma tante a planté des tomates et des concombres dans son jardin.', ['tante','tomates','concombres','jardin'],
     '<i>tante</i>, <i>tomates</i>, <i>concombres</i>, <i>jardin</i> : chacun est introduit par un déterminant (<i>ma, des, des, son</i>).'),
   CL('nom', '« Le <b>bruit</b> des voitures me réveille. »',
     '<i>bruit</i> a un déterminant devant (<i>le</i>) et désigne une chose → <b>nom</b>, noyau du GN <i>le bruit des voitures</i>.'),
@@ -763,12 +765,12 @@ SERIES.push({ id:'d', title:'Série D', seed: 53, groups: [
     'Le déterminant <i>les</i> introduit <b>vacances</b> ; <i>longues</i> le décrit ; <i>d’été</i> le complète.', 'Quel mot ne peut pas être effacé ?', 'le noyau'),
   MC('nom', '« Elle <b>danse</b> tous les soirs. »<br><i>danse</i> est…', ['un nom', 'un verbe'], 1,
     '<i>Elle ne danse pas</i> : encadrement réussi → <b>verbe</b>. Dans <i>une danse traditionnelle</i>, nom.'),
-  W('nom', '« Le <b>fleuve</b> est immense. »<br>Ce nom est-il <b>commun</b> ou <b>propre</b> ? Écris le mot.', ['commun','nom commun'],
-    '<i>fleuve</i> désigne n’importe quel fleuve, sans majuscule, avec un déterminant → nom <b>commun</b>. <i>Saint-Laurent</i> serait un nom propre.', null, 'commun ou propre')
+  CNT('nom', '<b>noms</b>', 'Le professeur explique la leçon aux élèves attentifs.', 3,
+    'Trois noms : <i>professeur</i>, <i>leçon</i>, <i>élèves</i>. <i>attentifs</i> est un adjectif, <i>aux</i> un déterminant contracté.')
 ],
 /* déterminant (6) */
 [
-  TAP('det', 'Tape sur les <b>déterminants</b> (il y en a 3).', 'Ces enfants ont reçu plusieurs cadeaux pour leur anniversaire.', ['Ces','plusieurs','leur'],
+  TAP('det', 'Tape sur les <b>déterminants</b>.', 'Ces enfants ont reçu plusieurs cadeaux pour leur anniversaire.', ['Ces','plusieurs','leur'],
     '<i>Ces</i> (enfants), <i>plusieurs</i> (cadeaux), <i>leur</i> (anniversaire) : chacun introduit un nom. Ce <i>leur</i>, devant un nom, est bien un déterminant.'),
   CL('det', '« <b>Chaque</b> élève reçoit un cahier. »',
     '<i>Chaque</i> introduit le nom <i>élève</i> → <b>déterminant</b> (indéfini). Remplace par <i>un</i> : <i>un élève</i>.'),
@@ -783,12 +785,12 @@ SERIES.push({ id:'d', title:'Série D', seed: 53, groups: [
 ],
 /* adjectif (6) */
 [
-  TAP('adj', 'Tape sur les <b>adjectifs</b> (il y en a 3).', 'Le jeune athlète rapide a remporté une médaille dorée.', ['jeune','rapide','dorée'],
+  TAP('adj', 'Tape sur les <b>adjectifs</b>.', 'Le jeune athlète rapide a remporté une médaille dorée.', ['jeune','rapide','dorée'],
     '<i>jeune</i> et <i>rapide</i> décrivent <i>athlète</i> ; <i>dorée</i> décrit <i>médaille</i> et s’accorde au féminin.'),
   CL('adj', '« Une histoire <b>drôle</b>. »',
     '<i>drôle</i> décrit <i>histoire</i> et s’accorde (<i>des histoires drôles</i>) → <b>adjectif</b>. Test : <i>très drôle</i>.'),
-  CL('adj', '« Des gants <b>chauds</b>. »',
-    '<i>chauds</i> décrit <i>gants</i>, masculin pluriel comme le nom → <b>adjectif</b>.'),
+  CNT('adj', '<b>adjectifs</b>', 'Ces longues journées chaudes fatiguent les jeunes travailleurs.', 3,
+    'Trois adjectifs : <i>longues</i> et <i>chaudes</i> (journées), <i>jeunes</i> (travailleurs). <i>Ces</i> et <i>les</i> sont des déterminants.'),
   MC('adj', '« Ils parlent <b>bas</b>. »<br><i>bas</i> est…', ['un adjectif', 'un adverbe'], 1,
     'Il modifie le verbe <i>parlent</i> et reste invariable (<i>elles parlent bas</i>) → <b>adverbe</b>. Dans <i>une table basse</i>, adjectif.'),
   W('adj', '« Des histoires (amusant). »<br>Écris l’adjectif correctement <b>accordé</b>.', ['amusantes'],
@@ -798,7 +800,7 @@ SERIES.push({ id:'d', title:'Série D', seed: 53, groups: [
 ],
 /* pronom (6) */
 [
-  TAP('pro', 'Tape sur les <b>pronoms</b> (il y en a 4).', 'Ils m’~ont invité, mais je ne peux pas y aller.', ['Ils','m’','je','y'],
+  TAP('pro', 'Tape sur les <b>pronoms</b>.', 'Ils m’~ont invité, mais je ne peux pas y aller.', ['Ils','m’','je','y'],
     '<i>Ils</i>, <i>m’</i> (= me), <i>je</i> sont des pronoms personnels ; <i>y</i> remplace <i>à la fête</i>. <i>ne… pas</i> est un adverbe.'),
   CL('pro', '« <b>Celle</b> de gauche est plus jolie. »',
     '<i>Celle</i> remplace un GN (<i>la maison</i>) et est sujet du verbe → <b>pronom</b> démonstratif.'),
@@ -813,7 +815,7 @@ SERIES.push({ id:'d', title:'Série D', seed: 53, groups: [
 ],
 /* verbe (6) */
 [
-  TAP('verbe', 'Tape sur les verbes <b>conjugués</b> (il y en a 2).', 'Dès que la cloche sonne, les élèves sortent.', ['sonne','sortent'],
+  TAP('verbe', 'Tape sur les verbes <b>conjugués</b>.', 'Dès que la cloche sonne, les élèves sortent.', ['sonne','sortent'],
     '<i>ne sonne pas</i>, <i>ne sortent pas</i> : deux verbes conjugués. <i>Dès que</i> est une conjonction.'),
   W('verbe', '« Je <b>sais</b> nager. »<br>Écris l’<b>infinitif</b> du verbe en gras.', ['savoir'],
     '<i>sais</i> → <b>savoir</b>. (<i>nager</i> est déjà un infinitif.)', null, 'infinitif'),
@@ -828,14 +830,14 @@ SERIES.push({ id:'d', title:'Série D', seed: 53, groups: [
 ],
 /* adverbe (6) */
 [
-  TAP('adv', 'Tape sur les <b>adverbes</b> (il y en a 3).', 'Aujourd’hui, le vent souffle fort et les vagues montent vite.', ['Aujourd’hui','fort','vite'],
+  TAP('adv', 'Tape sur les <b>adverbes</b>.', 'Aujourd’hui, le vent souffle fort et les vagues montent vite.', ['Aujourd’hui','fort','vite'],
     '<i>Aujourd’hui</i> (temps), <i>fort</i> et <i>vite</i> (manière) : invariables, ils modifient les verbes. <i>et</i> est une conjonction.'),
   W('adv', 'Écris l’<b>adverbe</b> formé à partir de l’adjectif « vif ».', ['vivement'],
     'Féminin <i>vive</i> + <i>-ment</i> → <b>vivement</b>.', null, 'adverbe en -ment'),
   CL('adv', '« Tu es <b>très</b> gentil. »',
     '<i>très</i> modifie l’adjectif <i>gentil</i> (intensité), invariable → <b>adverbe</b>.'),
-  CL('adv', '« Il reviendra <b>bientôt</b>. »',
-    '<i>bientôt</i> indique le temps, modifie <i>reviendra</i>, effaçable et invariable → <b>adverbe</b>.'),
+  CNT('adv', '<b>adverbes</b>', 'Ils marchent lentement mais sûrement.', 2,
+    'Deux adverbes en <i>-ment</i> : <i>lentement</i>, <i>sûrement</i>. <i>mais</i> est une conjonction.'),
   W('adv', '« Il neige encore ce matin. »<br>Écris l’<b>adverbe</b> de cette phrase.', ['encore'],
     '<i>encore</i> (temps) modifie <i>neige</i> ; il est invariable et effaçable. <i>ce</i> est un déterminant, <i>matin</i> un nom.', null, 'l’adverbe'),
   MC('adv', '« Il n’est pas <b>dedans</b>. »<br><i>dedans</i> est…', ['un adverbe', 'une préposition'], 0,
@@ -843,7 +845,7 @@ SERIES.push({ id:'d', title:'Série D', seed: 53, groups: [
 ],
 /* préposition (5) */
 [
-  TAP('prep', 'Tape sur les <b>prépositions</b> (il y en a 4).', 'Depuis lundi, je vais à l’école en autobus avec mon voisin.', ['Depuis','à','en','avec'],
+  TAP('prep', 'Tape sur les <b>prépositions</b>.', 'Depuis lundi, je vais à l’école en autobus avec mon voisin.', ['Depuis','à','en','avec'],
     '<i>Depuis lundi</i>, <i>à l’école</i>, <i>en autobus</i>, <i>avec mon voisin</i> : quatre GPrép, chacun commence par sa préposition.'),
   CL('prep', '« Un livre <b>sur</b> les dinosaures. »',
     '<i>sur</i> introduit le complément <i>les dinosaures</i> → <b>préposition</b>.'),
@@ -851,12 +853,12 @@ SERIES.push({ id:'d', title:'Série D', seed: 53, groups: [
     '<i>sans</i> introduit un complément à l’infinitif (<i>dire un mot</i>) → <b>préposition</b>.'),
   MC('prep', '« Il attend <b>jusqu’à</b> midi. »<br><i>jusqu’à</i> est…', ['une préposition', 'une conjonction'], 0,
     '<i>jusqu’à</i> + GN (<i>midi</i>) → <b>préposition</b>. La conjonction serait <i>jusqu’à ce qu’il arrive</i>.'),
-  MC('prep', '« Il pleure <b>de</b> joie. »<br>La préposition exprime…', ['la cause', 'le lieu', 'le temps'], 0,
-    '<i>de joie</i> dit pourquoi il pleure : la <b>cause</b>.')
+  CNT('verbe', 'verbes <b>conjugués</b>', 'Le chat dort, le chien joue et les enfants rient.', 3,
+    'Trois verbes conjugués : <i>ne dort pas</i>, <i>ne joue pas</i>, <i>ne rient pas</i>. Trois phrases coordonnées.')
 ],
 /* conjonction (4) */
 [
-  TAP('conj', 'Tape sur les <b>conjonctions</b> (il y en a 2).', 'Je lis ou j’écris, car j’adore les mots.', ['ou','car'],
+  TAP('conj', 'Tape sur les <b>conjonctions</b>.', 'Je lis ou j’écris, car j’adore les mots.', ['ou','car'],
     '<i>ou</i> (alternative) et <i>car</i> (cause) relient des phrases → coordination.'),
   CL('conj', '« Je t’appellerai <b>quand</b> j’arriverai. »',
     '<i>quand</i> introduit la phrase <i>j’arriverai</i> dans une autre → <b>conjonction</b> de subordination (ici, il ne pose pas de question).'),
