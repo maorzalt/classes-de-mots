@@ -129,6 +129,8 @@ h3 { margin: 0 0 8px; font-family: var(--font-head); font-weight: 700; font-size
 .leg.inv { background: color-mix(in srgb, var(--c-prep) 14%, var(--surface)); color: var(--c-prep); }
 
 .modlist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.modsec { list-style: none; margin: 10px 0 -2px; padding: 0 2px; font-family: var(--font-head); font-weight: 700; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.modsec:first-child { margin-top: 0; }
 .modrow {
   display: grid; grid-template-columns: 36px 1fr auto; align-items: center; gap: 12px;
   padding: 12px 12px 12px 14px; background: var(--surface); border-radius: var(--r); border: 2px solid transparent;
@@ -281,17 +283,18 @@ body.sheet-open { overflow: hidden; }
 const APP = {
   key: 'classes-de-mots-series-v1',
   brand: 'Séries de 50',
-  eyebrow: 'Entraînement intensif · 4 tests indépendants',
+  eyebrow: 'Entraînement intensif · 4 séries × 5 capsules',
   title: 'Quatre séries de 50',
-  lead: 'Quatre tests de 50 questions, chacun sur toute la matière : les 8 classes de mots et les manipulations. La moitié des réponses sont à écrire. Tu vois la correction tout de suite, et une question ratée revient une fois à la fin. Compte 15 à 20 minutes par série.',
+  lead: 'Quatre séries de 50 questions sur toute la matière (les 8 classes de mots et les manipulations), découpées en capsules de 10 questions. La moitié des réponses sont à écrire. Tu vois la correction tout de suite, et une question ratée revient une fois à la fin de la capsule. Compte 3 à 4 minutes par capsule.',
   examTitle: 'Série',
-  startLabel: 'Commencer la série A',
-  redoLabel: 'Refaire une série',
-  modEndTitle: 'Série terminée',
+  startLabel: 'Commencer',
+  redoLabel: 'Refaire une capsule',
+  modEndTitle: 'Capsule terminée',
+  nextWord: 'Capsule suivante',
   endMsgs: [
-    'Excellent. Tu maîtrises la matière : passe à la série suivante quand tu veux.',
-    'Bien. Relis l’explication des questions ratées, puis enchaîne avec la série suivante.',
-    'Il reste des hésitations. Regarde l’aide-mémoire (icône en haut), puis refais cette série avant de passer à la suivante.'
+    'Excellent. Tu maîtrises la matière : enchaîne avec la capsule suivante.',
+    'Bien. Relis l’explication des questions ratées, puis enchaîne avec la capsule suivante.',
+    'Il reste des hésitations. Regarde l’aide-mémoire (icône en haut), puis refais cette capsule avant de passer à la suivante.'
   ],
   reviewTries: 1,
   oneBased: true
@@ -869,12 +872,22 @@ SERIES.push({ id:'d', title:'Série D', seed: 53, groups: [
 ]
 ]});
 
-/* ---- Assemblage des séries ---- */
-const MODULES = SERIES.map(s => ({
-  id: s.id, cls: 'mix', title: s.title, minutes: 18, intro: '',
-  defaultHint: HINT_DEFAULT, lesson: [],
-  items: seededShuffle(s.groups.flat(), s.seed)
-}));
+/* ---- Assemblage : chaque série de 50 devient 5 capsules de 10 ---- */
+const CAP = 10;
+const MODULES = [];
+SERIES.forEach(s => {
+  const L = s.title.replace('Série ', '');
+  const order = seededShuffle(s.groups.flat(), s.seed);
+  for (let c = 0; c * CAP < order.length; c++) {
+    MODULES.push({
+      id: s.id + (c + 1), cls: 'mix', title: `Série ${L} · capsule ${c + 1}`, section: `Série ${L}`, num: c + 1, minutes: 4, intro: '',
+      defaultHint: HINT_DEFAULT, lesson: [],
+      items: order.slice(c * CAP, (c + 1) * CAP)
+    });
+  }
+});
+/* Progression déjà enregistrée dans l’ancienne version (un module de 50 par série) → reportée sur les capsules */
+APP.split = { size: CAP, from: SERIES.map(s => ({ id: s.id, ids: MODULES.filter(m => m.id.startsWith(s.id)).map(m => m.id) })) };
 const EXAM = null;
 </script>
 <script>
@@ -916,6 +929,35 @@ const EXAM = null;
   });
   let S = Object.assign(fresh(), load() || {});
   if (!S.exam) S.exam = fresh().exam;
+  /* Migration : un ancien module découpé en capsules (CFG.split = { size, from:[{ id, ids }] }) */
+  if (CFG.split && S.modules) {
+    const sz = CFG.split.size;
+    CFG.split.from.forEach((sp, oldIdx) => {
+      const wasDone = S.modules[sp.id]?.done;
+      const ft = S.firstTry?.[sp.id];
+      const inProg = !wasDone && ft && S.modIdx === oldIdx && S.mainOrder?.length === sp.ids.length * sz;
+      if (!wasDone && !inProg) return;
+      const rate = ft && ft.total ? ft.correct / ft.total : (wasDone && S.modules[sp.id].total ? S.modules[sp.id].correct / S.modules[sp.id].total : 1);
+      const answered = wasDone || S.phase !== 'main' ? sp.ids.length * sz : Math.min(S.qIdx, sp.ids.length * sz);
+      const doneCaps = Math.floor(answered / sz);
+      let creditGiven = 0;
+      for (let c = 0; c < doneCaps; c++) { const cr = Math.round(rate * sz); creditGiven += cr; S.modules[sp.ids[c]] = { done: true, correct: cr, total: sz, seconds: Math.round((S.modules[sp.id]?.seconds || S.elapsed || 0) / sp.ids.length) }; }
+      delete S.modules[sp.id]; if (S.firstTry) delete S.firstTry[sp.id];
+      if (inProg && S.phase === 'main' && doneCaps < sp.ids.length) {
+        const c = doneCaps, k = S.qIdx - c * sz;
+        S.modIdx = MODULES.findIndex(m => m.id === sp.ids[c]); S.qIdx = k;
+        S.mainOrder = Array.from({ length: sz }, (_, j) => j);
+        S.reviewQueue = (S.reviewQueue || []).filter(r => Math.floor(r / sz) === c).map(r => r % sz); S.reviewTries = {};
+        S.firstTry[sp.ids[c]] = { total: k, correct: Math.max(0, Math.min(k, (ft?.correct || 0) - creditGiven)) };
+        S.modStart = S.elapsed;
+        if (S.screen === 'quiz' || S.screen === 'modend') S.screen = 'quiz';
+      } else {
+        S.phase = 'main'; S.qIdx = 0; S.mainOrder = []; S.reviewQueue = []; S.reviewTries = {};
+        if (['quiz', 'modend', 'lesson'].includes(S.screen)) S.screen = 'home';
+      }
+      save();
+    });
+  }
 
   /* ---------- Chrono (secondes actives) ---------- */
   setInterval(() => {
@@ -1012,10 +1054,12 @@ const EXAM = null;
 
     const list = el('ol', { class: 'modlist' });
     let nextIdx = MODULES.findIndex(m => !S.modules[m.id]?.done);
+    let lastSec = null;
     MODULES.forEach((m, i) => {
       const st = S.modules[m.id];
+      if (m.section && m.section !== lastSec) { lastSec = m.section; list.append(el('li', { class: 'modsec' }, m.section)); }
       const li = el('li', { class: 'modrow' + (st?.done ? ' done' : '') + (i === nextIdx ? ' next' : ''), style: `--accent:${clsColor(m.cls)}` });
-      const dot = el('span', { class: 'moddot' }, st?.done ? svgCheck() : String(MODULES.length === 1 ? 1 : i + (CFG.oneBased ? 1 : 0)));
+      const dot = el('span', { class: 'moddot' }, st?.done ? svgCheck() : String(m.num != null ? m.num : MODULES.length === 1 ? 1 : i + (CFG.oneBased ? 1 : 0)));
       const txt = el('div', { class: 'modtxt' }, el('div', { class: 'modname' }, m.title), el('div', { class: 'modmeta' }, st?.done ? `${st.correct}/${st.total} au premier essai · ${fmtMin(st.seconds || 0)}` : `${m.items.length} questions · ~${m.minutes} min`));
       const btn = el('button', { class: 'btn small', onclick: () => startModule(i) }, st?.done ? 'Refaire' : (i === nextIdx && started ? 'Continuer' : 'Ouvrir'));
       li.append(dot, txt, btn);
@@ -1254,7 +1298,7 @@ const EXAM = null;
     const nextIdx = MODULES.findIndex((x, i) => i > S.modIdx && !S.modules[x.id]?.done);
     const anyLeft = MODULES.findIndex(x => !S.modules[x.id]?.done);
     let next;
-    if (nextIdx >= 0) next = primaryBtn(`Module suivant : ${MODULES[nextIdx].title}`, () => startModule(nextIdx));
+    if (nextIdx >= 0) next = primaryBtn(`${CFG.nextWord || 'Module suivant'} : ${MODULES[nextIdx].title}`, () => startModule(nextIdx));
     else if (anyLeft >= 0) next = primaryBtn(`Continuer : ${MODULES[anyLeft].title}`, () => startModule(anyLeft));
     else if (HAS_EXAM) next = primaryBtn(`Passer : ${CFG.examTitle}`, startExamIntro);
     else next = primaryBtn('Accueil', goHome);
